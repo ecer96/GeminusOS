@@ -98,7 +98,9 @@ TARGET="${1:-${YT_TARGET:-}}"
 CONF_USED=""
 # Sin argumento: preguntar en la pantalla de abajo (teclado en pantalla).
 if [ -z "$TARGET" ] && [ -x /mnt/vendor/ctrl/geminus-yt-panel ]; then
-    Q="$(/mnt/vendor/ctrl/geminus-yt-panel --search 2>>"$LOG" | tail -n1)"
+    rm -f /tmp/yt-query
+    /mnt/vendor/ctrl/geminus-yt-panel --search >/dev/null 2>>"$LOG"
+    Q="$(cat /tmp/yt-query 2>/dev/null)"
     if [ -n "$Q" ]; then TARGET="$Q"; CONF_USED="búsqueda"; fi
 fi
 if [ -z "$TARGET" ]; then
