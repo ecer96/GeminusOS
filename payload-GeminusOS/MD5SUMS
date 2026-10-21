@@ -20,12 +20,12 @@ a67c1c7cee3c1332f573556816291f5b  ./vendor/ctrl/apps/media/box2d/youtube.png
 ea6d407a1e155714a23e6f40e243acb4  ./vendor/ctrl/apps/media.conf
 3481075e15c9fa3dfb20ae69665ab316  ./vendor/ctrl/apps/media.sh
 af9a182d628a3c14a96f387f653bd0ae  ./vendor/ctrl/apps/youtube.conf
-094faf87b641ea4de1ee8f43b716902f  ./vendor/ctrl/apps/youtube.sh
+7b6359b9fca5a40c70f8a9bba9003369  ./vendor/ctrl/apps/youtube.sh
 41eadc56d5916b38a97dd18809ca1376  ./vendor/ctrl/apps/yt-bridge.py
 b0d7ba4a1dc9cf89693160c701e6cdb4  ./vendor/ctrl/apps/yt-dlp
 a9d2b0d3b9148b37c0914abbe1704279  ./vendor/ctrl/dmenu_ln
 dcd605c963b46bceeb2bfb7f64b418fb  ./vendor/ctrl/geminuslauncher
-8388a7a3fbfc5a8db34ea7fe0c3b6837  ./vendor/ctrl/geminus-yt-panel
+1254ebb2ac8e0e4a8bebb76a541fc67d  ./vendor/ctrl/geminus-yt-panel
 81bfe439e0e0017213c0696053427bf6  ./vendor/ctrl/icons_grid/apps.png
 2053882356d53dc9fe241438ab2e2575  ./vendor/ctrl/icons_grid/browser.png
 544c51929bc1292118ce229e606ef927  ./vendor/ctrl/icons_grid/dc.png
@@ -53,7 +53,7 @@ c3d8901831a5c60360ea23b05393bea9  ./vendor/ctrl/setSSH.sh
 5d8e329a349d7d365c9f2ce66c9920b9  ./vendor/ctrl/ui/geminus_word_dark.png
 741cf6a49acbe68612b0d0a6c0a7acb3  ./vendor/ctrl/ui/geminus_word.png
 89310979101b576c0c78e58b6524f242  ./vendor/ctrl/waiting/bootlogo.bmp
-094faf87b641ea4de1ee8f43b716902f  ./vendor/ctrl/youtube.sh
+7b6359b9fca5a40c70f8a9bba9003369  ./vendor/ctrl/youtube.sh
 41eadc56d5916b38a97dd18809ca1376  ./vendor/ctrl/yt-bridge.py
 5f4fbdd32a0d5a93b3487062cf8cfe06  ./vendor/deep/nds-emu/nds_emu
 20e540ca9fdf100033c307f1813f9120  ./vendor/resource/res1/boot/logo2.png
