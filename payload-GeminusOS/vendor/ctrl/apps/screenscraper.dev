@@ -1,0 +1,9 @@
+# Credenciales de desarrollador de ScreenScraper (NO visibles para el usuario).
+# Las usa scrape_screenscraper.py desde /mnt/vendor/ctrl/apps/screenscraper.dev
+# El usuario final solo configura su cuenta en Ajustes > Scraper > Credenciales.
+#
+# Solicita las tuyas en https://www.screenscraper.fr (seccion desarrolladores).
+
+devid=
+devpassword=
+softname=GeminusOS

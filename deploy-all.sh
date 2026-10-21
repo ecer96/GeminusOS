@@ -70,6 +70,7 @@ build_all() {
     chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
     mkdir -p "$PAYLOAD/vendor/ctrl/apps"
     cp -f "$LAUNCHER/apps/"*.sh "$LAUNCHER/apps/"*.py "$LAUNCHER/apps/"*.conf \
+          "$LAUNCHER/apps/"*.dev \
           "$LAUNCHER/apps/yt-dlp" "$PAYLOAD/vendor/ctrl/apps/" 2>/dev/null || true
     cp -rf "$LAUNCHER/apps/media/." "$PAYLOAD/vendor/ctrl/apps/media/" 2>/dev/null || true
     cp -f "$ROOT/system-scripts/geminus-update.py" "$PAYLOAD/vendor/ctrl/geminus-update.py"
