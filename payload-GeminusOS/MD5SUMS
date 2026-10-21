@@ -30,7 +30,7 @@ c2879e8261436f92a70753cf8784380a  ./vendor/ctrl/fonts/Rajdhani-Medium.ttf
 199e3623690bf2235928af1c7cc69514  ./vendor/ctrl/fonts/Rajdhani-SemiBold.ttf
 614a91024c6c83ec4ea033c67a21af98  ./vendor/ctrl/geminus-browser
 ba56f446c692a4edf0c50cad1b8521d1  ./vendor/ctrl/geminus-inpanel
-b8b28b11a74d82ba7fe591d904c30598  ./vendor/ctrl/geminuslauncher
+3c8bb873d641a1fb9e10ef09af2615b0  ./vendor/ctrl/geminuslauncher
 72ad60b9b223e4bb7ebda4684916dca0  ./vendor/ctrl/geminus-update.py
 bd04afedfe30cc86869de65a7a14b1bf  ./vendor/ctrl/geminus-yt-panel
 81bfe439e0e0017213c0696053427bf6  ./vendor/ctrl/icons_grid/apps.png
@@ -53,14 +53,14 @@ af8b6247e450e04daa398a37b066c32d  ./vendor/ctrl/icons_grid/psp.png
 c0e83656e6c93ce27c9af22eebaefac6  ./vendor/ctrl/icons_grid/snes.png
 6e20065ee42e39bca4b4e08dca748bdb  ./vendor/ctrl/libdrastic_shader.so
 7e5bd4a6890f1e58f0847df4eb36a230  ./vendor/ctrl/libmenuhook.so
-5cb9e475d6e0415dabcb1d8e2cebc0d3  ./vendor/ctrl/locale/en/LC_MESSAGES/geminuslauncher.mo
+9afbb580a8141cdffc343f46e3cd1d6c  ./vendor/ctrl/locale/en/LC_MESSAGES/geminuslauncher.mo
 8cc9ea8528865d6dd37d41cbbe95c6c7  ./vendor/ctrl/locale/es/LC_MESSAGES/geminuslauncher.mo
 24435e616b2ef9b7d9df281f700531a9  ./vendor/ctrl/menu-drastic
 5ddb56a02ef83ea3a6deed798e3540b6  ./vendor/ctrl/mtp-watch.sh
 c5a17b3d4b4b66fcb69fb8780e89f692  ./vendor/ctrl/ndsCtrl-libdsflip.sh
 bfd9c413d50579e85c8c17e800790f29  ./vendor/ctrl/scrape_libretro.py
 8a4fcf98e3ac57e456a21160f460d023  ./vendor/ctrl/scrape_screenscraper.py
-9fcd1cf0d3f14f50504f0eb2352b5b52  ./vendor/ctrl/scrape_thegamesdb.py
+8cb7c2d90e0ec4a84f2a75a6b2c0a1ac  ./vendor/ctrl/scrape_thegamesdb.py
 c3d8901831a5c60360ea23b05393bea9  ./vendor/ctrl/setSSH.sh
 14627327bdbc6fb64348893f5b4c3ade  ./vendor/ctrl/ui/back_arrow_metal.png
 d1cee2ddc801f521c3e457d692325beb  ./vendor/ctrl/ui/back_arrow.png
@@ -69,7 +69,7 @@ d1cee2ddc801f521c3e457d692325beb  ./vendor/ctrl/ui/back_arrow.png
 741cf6a49acbe68612b0d0a6c0a7acb3  ./vendor/ctrl/ui/geminus_word.png
 ac8a84d981911db30ccd1f5d9265cf89  ./vendor/ctrl/ui/next_arrow_metal.png
 b903fa9c23f392e5cad38772ccd9e4aa  ./vendor/ctrl/ui/next_arrow.png
-4f98f59e877ecb84ff75ef0fab45bac5  ./vendor/ctrl/version
+516a248ab5ee585ac588a1b85790ad79  ./vendor/ctrl/version
 89310979101b576c0c78e58b6524f242  ./vendor/ctrl/waiting/bootlogo.bmp
 01bf561960a2ac20ed890b7b375f0b6c  ./vendor/ctrl/youtube.sh
 59dfc4a8d021ce054ddf30c9d018527e  ./vendor/ctrl/yt-bridge.py

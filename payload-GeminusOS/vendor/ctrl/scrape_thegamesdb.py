@@ -91,7 +91,7 @@ SYSTEM_NAMES = {
 TYPE_MAP = {
     "box":   ("boxart",    "box2d",      ""),
     "snap":  ("screenshot", "screenshot", "-image"),
-    "title": ("screenshot", "titlescreen", "-image"),
+    "title": ("titlescreen", "titlescreen", "-image"),
     "logo":  ("clearlogo", "wheel",      "-marquee"),
     "fanart": ("fanart",   "fanart",     "-fanart"),
 }
@@ -208,27 +208,82 @@ def save_image(base_url, filename, dest):
         return False
 
 
-def _names(include, key, ids):
-    table = include.get(key, {}).get("data", {})
-    if isinstance(table, dict) and isinstance(ids, list):
-        return [table.get(str(i), "") for i in ids if table.get(str(i))]
-    return []
+def _map_names(payload, key):
+    """Extrae {id: nombre} de /Genres, /Developers o /Publishers."""
+    node = payload.get("data", {}) if isinstance(payload, dict) else {}
+    for k in (key, key[:-1] if key.endswith("s") else key):
+        tbl = node.get(k)
+        if isinstance(tbl, dict):
+            out = {}
+            for kk, vv in tbl.items():
+                if isinstance(vv, dict):
+                    out[str(kk)] = vv.get("name") or vv.get("genre") or ""
+                elif isinstance(vv, str):
+                    out[str(kk)] = vv
+            if out:
+                return out
+        elif isinstance(tbl, list):
+            out = {}
+            for vv in tbl:
+                if isinstance(vv, dict):
+                    out[str(vv.get("id"))] = vv.get("name", "")
+            if out:
+                return out
+    return {}
 
 
-def meta_from_game(g, include=None):
-    include = include or {}
+MAP_CACHE = "/tmp/geminus_tgdb_maps.json"
+
+
+def load_name_maps(apikey):
+    try:
+        with open(MAP_CACHE, encoding="utf-8") as f:
+            cached = json.load(f)
+        if cached.get("apikey") == apikey and cached.get("genres"):
+            return cached
+    except (OSError, ValueError):
+        pass
+
+    maps = {"apikey": apikey, "genres": {}, "developers": {}, "publishers": {}}
+    for key, endpoint in (("genres", "/Genres"),
+                          ("developers", "/Developers"),
+                          ("publishers", "/Publishers")):
+        try:
+            maps[key] = _map_names(api_get(apikey, endpoint), key)
+        except Exception as e:  # noqa: BLE001 - sin mapa se omite el campo
+            sys.stderr.write("[tgdb] mapa %s: %s\n" % (key, e))
+    try:
+        with open(MAP_CACHE, "w", encoding="utf-8") as f:
+            json.dump(maps, f)
+    except OSError:
+        pass
+    return maps
+
+
+def _resolve(maps, inline, key, ids):
+    if not isinstance(ids, list):
+        return []
+    table = {}
+    if isinstance(inline, dict):
+        table.update(inline)
+    table.update(maps.get(key, {}) or {})
+    return [table.get(str(i), "") for i in ids if table.get(str(i))]
+
+
+def meta_from_game(g, maps=None, inline=None):
+    maps = maps or {}
+    inline = inline or {}
     vals = {}
     rel = g.get("release_date") or ""
     m = re.match(r"(\d{4})", str(rel))
     if m:
         vals["year"] = m.group(1)
-    genres = g.get("genres")
-    if isinstance(genres, list) and genres:
-        vals["genre"] = ", ".join(_names(include, "genres", genres))
-    devs = g.get("developers")
-    names = _names(include, "developers", devs)
+    genres = _resolve(maps, inline.get("genres"), "genres", g.get("genres"))
+    if genres:
+        vals["genre"] = ", ".join(genres)
+    names = _resolve(maps, inline.get("developers"), "developers", g.get("developers"))
     if not names:
-        names = _names(include, "publishers", g.get("publishers"))
+        names = _resolve(maps, inline.get("publishers"), "publishers", g.get("publishers"))
     if names:
         vals["developer"] = ", ".join(names)
     if g.get("overview"):
@@ -247,6 +302,7 @@ def scrape(rom_dir, rom_filter, types, force, st, root="/mnt/sdcard/roms", all_p
         return 2
 
     platforms = load_platforms(apikey)
+    name_maps = load_name_maps(apikey)
     plat_dirs = ([d for d in SYSTEM_NAMES if os.path.isdir(os.path.join(root, d))]
                  if all_plats else [rom_dir])
     roms = []
@@ -266,7 +322,7 @@ def scrape(rom_dir, rom_filter, types, force, st, root="/mnt/sdcard/roms", all_p
             search = norm(name) or name
             data = api_get(apikey, "/Games/ByGameName", name=search,
                            fields="overview,developers,publishers,genres,release_date,platform",
-                           include="boxart,genres,developers,publishers")
+                           include="boxart")
             games = data.get("data", {}).get("games", [])
             if not games:
                 st.fail += 1
@@ -297,8 +353,10 @@ def scrape(rom_dir, rom_filter, types, force, st, root="/mnt/sdcard/roms", all_p
                 if save_image(base_url, fn, dest):
                     got += 1
 
-            write_meta(os.path.dirname(path), name,
-                       meta_from_game(g, data.get("include", {})), force)
+            if write_meta(os.path.dirname(path), name,
+                          meta_from_game(g, name_maps,
+                                         data.get("data", {})), force):
+                st.meta += 1
             st.ok += 1
             st.write()
         except Exception as e:
@@ -309,7 +367,7 @@ def scrape(rom_dir, rom_filter, types, force, st, root="/mnt/sdcard/roms", all_p
         time.sleep(1.2)
 
     st.state = "DONE"
-    st.msg = "%d imagenes" % st.ok
+    st.msg = "%d imagenes, %d metadatos" % (st.ok, st.meta)
     st.write()
     return 0
 
