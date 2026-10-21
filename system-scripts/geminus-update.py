@@ -14,6 +14,7 @@
 import hashlib
 import json
 import os
+import re
 import shutil
 import ssl
 import subprocess
@@ -59,6 +60,24 @@ def _state_read():
     except OSError:
         pass
     return data
+
+
+def _ver_tuple(s):
+    nums = re.findall(r"\d+", s or "")
+    return tuple(int(n) for n in nums) if nums else None
+
+
+def is_newer(latest, current):
+    """True solo si `latest` es una version posterior a `current`.
+
+    Evita ofrecer "actualizaciones" cuando el tag es igual o anterior
+    (por ejemplo, tag v1 con la v1.1 ya instalada).
+    """
+    a, b = _ver_tuple(latest), _ver_tuple(current)
+    if a is not None and b is not None:
+        n = max(len(a), len(b))
+        return a + (0,) * (n - len(a)) > b + (0,) * (n - len(b))
+    return (latest or "") != (current or "")
 
 
 def installed_version():
@@ -138,7 +157,7 @@ def cmd_check(force=False):
     try:
         _state_write("checking")
         tag, _, _ = latest_release()
-        if tag != installed_version():
+        if is_newer(tag, installed_version()):
             _state_write("available", tag, 0, "version %s disponible" % tag)
         else:
             _state_write("idle", tag, 0, "al dia")
@@ -207,7 +226,7 @@ def cmd_apply():
     tag = installed_version()
     try:
         tag, url, sha_url = latest_release()
-        if tag == installed_version():
+        if not is_newer(tag, installed_version()):
             _state_write("idle", tag, 0, "al dia")
             return 0
 
