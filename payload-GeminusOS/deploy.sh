@@ -16,8 +16,8 @@ TS="$(date +%Y%m%d-%H%M%S)"
 
 echo "=== 1. vendor/ctrl ==="
 mkdir -p "$DEST/ctrl"
-for f in geminuslauncher dmenu_ln menu-drastic libmenuhook.so libdrastic_shader.so \
-         ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh; do
+for f in geminuslauncher geminus-yt-panel youtube.sh yt-bridge.py dmenu_ln menu-drastic \
+         libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh; do
     src="$HERE/vendor/ctrl/$f"
     [ -f "$src" ] || { echo "  falta $src"; exit 1; }
     cp -f "$src" "$DEST/ctrl/$f"; chmod 755 "$DEST/ctrl/$f"
