@@ -8,7 +8,7 @@ menú in-game, aplicaciones y ajustes del sistema en una sola imagen.
 
 ## Descarga
 
-La imagen está en **[Releases](https://github.com/ecer96/GeminusOS/releases/latest)**:
+La imagen está en **[Releases](https://github.com/ecer96/GeminusOS/releases/tag/v1)**:
 
 | Archivo | Tamaño | SHA-256 |
 |---|---|---|
