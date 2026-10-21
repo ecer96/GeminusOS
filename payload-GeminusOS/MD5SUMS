@@ -28,6 +28,7 @@ a9d2b0d3b9148b37c0914abbe1704279  ./vendor/ctrl/dmenu_ln
 6817d0685418755f63b30bcfa9c425a6  ./vendor/ctrl/fonts/Orbitron-Bold.ttf
 c2879e8261436f92a70753cf8784380a  ./vendor/ctrl/fonts/Rajdhani-Medium.ttf
 199e3623690bf2235928af1c7cc69514  ./vendor/ctrl/fonts/Rajdhani-SemiBold.ttf
+b6b4abce0f96db8e6290c90d5861a723  ./vendor/ctrl/geminus-browser
 ba56f446c692a4edf0c50cad1b8521d1  ./vendor/ctrl/geminus-inpanel
 422f0aedd3d5b103615455ca254a011f  ./vendor/ctrl/geminuslauncher
 72ad60b9b223e4bb7ebda4684916dca0  ./vendor/ctrl/geminus-update.py
@@ -68,7 +69,7 @@ d1cee2ddc801f521c3e457d692325beb  ./vendor/ctrl/ui/back_arrow.png
 741cf6a49acbe68612b0d0a6c0a7acb3  ./vendor/ctrl/ui/geminus_word.png
 ac8a84d981911db30ccd1f5d9265cf89  ./vendor/ctrl/ui/next_arrow_metal.png
 b903fa9c23f392e5cad38772ccd9e4aa  ./vendor/ctrl/ui/next_arrow.png
-0f39c9255dc692bbc74093381780a04a  ./vendor/ctrl/version
+4f98f59e877ecb84ff75ef0fab45bac5  ./vendor/ctrl/version
 89310979101b576c0c78e58b6524f242  ./vendor/ctrl/waiting/bootlogo.bmp
 01bf561960a2ac20ed890b7b375f0b6c  ./vendor/ctrl/youtube.sh
 59dfc4a8d021ce054ddf30c9d018527e  ./vendor/ctrl/yt-bridge.py

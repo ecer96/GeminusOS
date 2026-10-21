@@ -58,6 +58,7 @@ build_all() {
     cp -f "$LAUNCHER/build/geminuslauncher"      "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/build/geminus-yt-panel"     "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/build/geminus-inpanel"      "$PAYLOAD/vendor/ctrl/"
+    cp -f "$LAUNCHER/build/geminus-browser"      "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/apps/youtube.sh"            "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/apps/yt-bridge.py"          "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/geminus-run.sh"             "$PAYLOAD/vendor/ctrl/dmenu_ln"
@@ -77,7 +78,7 @@ build_all() {
           "$PAYLOAD/vendor/ctrl/ui/"
     mkdir -p "$PAYLOAD/vendor/ctrl/fonts"
     cp -f "$LAUNCHER/assets/fonts/"*.ttf "$PAYLOAD/vendor/ctrl/fonts/" 2>/dev/null || true
-    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
+    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
     chmod 755 "$PAYLOAD/vendor/ctrl/"scrape_*.py
     mkdir -p "$PAYLOAD/vendor/ctrl/apps"
     cp -f "$LAUNCHER/apps/"*.sh "$LAUNCHER/apps/"*.py "$LAUNCHER/apps/"*.conf \

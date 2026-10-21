@@ -16,7 +16,7 @@ TS="$(date +%Y%m%d-%H%M%S)"
 
 echo "=== 1. vendor/ctrl ==="
 mkdir -p "$DEST/ctrl"
-for f in geminuslauncher geminus-yt-panel geminus-inpanel youtube.sh yt-bridge.py dmenu_ln menu-drastic \
+for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtube.sh yt-bridge.py dmenu_ln menu-drastic \
          libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh \
          geminus-update.py version scrape_libretro.py scrape_screenscraper.py \
          scrape_thegamesdb.py; do
@@ -33,6 +33,19 @@ done
         chmod 644 "$DEST/ctrl/$d"/* 2>/dev/null
         echo "  $d ($(ls "$DEST/ctrl/$d" | wc -l) ficheros)"
     done
+    # Los scripts de Apps deben seguir siendo ejecutables (si no, el launcher
+    # los lanzaría con "sh" y sus bashismos fallarían).
+    chmod 755 "$DEST/ctrl/apps/"*.sh  "$DEST/ctrl/apps/"*.py \
+              "$DEST/ctrl/apps/yt-dlp" 2>/dev/null || true
+
+echo "=== 1c. despachador (geminus-run.sh) ==="
+for d in /userdata /mnt/data; do
+    if [ -d "$d" ] && [ -w "$d" ]; then
+        cp -f "$HERE/vendor/ctrl/dmenu_ln" "$d/geminus-run.sh"
+        chmod 755 "$d/geminus-run.sh"
+        echo "  $d/geminus-run.sh"
+    fi
+done
 
 echo "=== 2. vendor/deep ==="
 mkdir -p "$DEST/deep/nds-emu"
