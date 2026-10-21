@@ -24,7 +24,7 @@ af9a182d628a3c14a96f387f653bd0ae  ./vendor/ctrl/apps/youtube.conf
 59dfc4a8d021ce054ddf30c9d018527e  ./vendor/ctrl/apps/yt-bridge.py
 b0d7ba4a1dc9cf89693160c701e6cdb4  ./vendor/ctrl/apps/yt-dlp
 a9d2b0d3b9148b37c0914abbe1704279  ./vendor/ctrl/dmenu_ln
-2cb05507c141ee428d53109de696dfd2  ./vendor/ctrl/geminuslauncher
+9a2fe0ded0383656bd7d627e4672906c  ./vendor/ctrl/geminuslauncher
 ce654fd8741c2ae597a9ad574f7f19f1  ./vendor/ctrl/geminus-update.py
 bd04afedfe30cc86869de65a7a14b1bf  ./vendor/ctrl/geminus-yt-panel
 81bfe439e0e0017213c0696053427bf6  ./vendor/ctrl/icons_grid/apps.png
