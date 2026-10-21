@@ -52,12 +52,12 @@ af8b6247e450e04daa398a37b066c32d  ./vendor/ctrl/icons_grid/ps1.png
 af8b6247e450e04daa398a37b066c32d  ./vendor/ctrl/icons_grid/psp.png
 c0e83656e6c93ce27c9af22eebaefac6  ./vendor/ctrl/icons_grid/snes.png
 6e20065ee42e39bca4b4e08dca748bdb  ./vendor/ctrl/libdrastic_shader.so
-15f539c0e6eba00b7ff1eebf4df17a48  ./vendor/ctrl/libmenuhook.so
+a91d571479999fef4bf8e1c1a5fd66ac  ./vendor/ctrl/libmenuhook.so
 2041a727107f497283354ff7b0320903  ./vendor/ctrl/locale/en/LC_MESSAGES/geminuslauncher.mo
 8cc9ea8528865d6dd37d41cbbe95c6c7  ./vendor/ctrl/locale/es/LC_MESSAGES/geminuslauncher.mo
 1973af1f028d6f77415419a4fab5aa45  ./vendor/ctrl/menu-drastic
 5ddb56a02ef83ea3a6deed798e3540b6  ./vendor/ctrl/mtp-watch.sh
-d53032cb1b3d31f541ed02486b94d66e  ./vendor/ctrl/ndsCtrl-libdsflip.sh
+b630adea30c3f408f411d424447f5dc3  ./vendor/ctrl/ndsCtrl-libdsflip.sh
 bfd9c413d50579e85c8c17e800790f29  ./vendor/ctrl/scrape_libretro.py
 8a4fcf98e3ac57e456a21160f460d023  ./vendor/ctrl/scrape_screenscraper.py
 9fcd1cf0d3f14f50504f0eb2352b5b52  ./vendor/ctrl/scrape_thegamesdb.py

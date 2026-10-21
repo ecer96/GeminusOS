@@ -90,6 +90,9 @@ while true; do
         log "AVISO: sink stereo-fallback no encontrado, audio puede no sonar"
     fi
 
+    # Micro: asegurar que la fuente de captura no este muteada.
+    pactl set-source-mute @DEFAULT_SOURCE@ 0 2>/dev/null
+
     PRE="./libs/libdrastouch.so"
     [ -f "$MENUHOOK" ]  && PRE="$MENUHOOK:$PRE"
     [ -f "$SHADERLIB" ] && PRE="$SHADERLIB:$PRE"
