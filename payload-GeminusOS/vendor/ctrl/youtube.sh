@@ -63,10 +63,10 @@ SNK=$(XDG_RUNTIME_DIR=/var/run pactl list short sinks 2>/dev/null | awk '/stereo
 if [ -n "$AUD" ]; then
     exec mpv --no-config --fullscreen --fs-screen=0 --keep-open=no \
         --hwdec=auto-safe --vo=gpu --gpu-context=wayland \
-        --cache=yes --demuxer-readahead-secs=8 --volume=25 \
+        --cache=yes --demuxer-readahead-secs=8 --mute=yes \
         --audio-file="$AUD" --title="YouTube" "$VID"
 else
     exec mpv --no-config --fullscreen --fs-screen=0 --keep-open=no \
         --hwdec=auto-safe --vo=gpu --gpu-context=wayland \
-        --cache=yes --demuxer-readahead-secs=8 --title="YouTube" "$VID"
+        --cache=yes --demuxer-readahead-secs=8 --mute=yes --title="YouTube" "$VID"
 fi
