@@ -1,0 +1,6 @@
+# Repositorio de distribución: solo README y checksums.
+# La imagen se publica como asset en Releases (no dentro del árbol git).
+*
+!.gitignore
+!README.md
+!SHA256SUMS
