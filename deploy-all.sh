@@ -148,22 +148,8 @@ package_payload() {
     echo "paquete: $TMP/geminus-payload.tar.gz ($SZ)"
     cat "$TMP/geminus-payload.tar.gz.sha256"
 
-    if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-        msg "Subiendo $VER a GitHub"
-        if ! gh release view "$VER" --repo ecer96/GeminusOS >/dev/null 2>&1; then
-            gh release create "$VER" --repo ecer96/GeminusOS \
-                --title "GeminusOS $VER" \
-                --notes "Actualización de GeminusOS $VER. Instalable desde Ajustes > Actualizar." \
-                || die "no se pudo crear el release $VER"
-        fi
-        gh release upload "$VER" \
-            "$TMP/geminus-payload.tar.gz" \
-            "$TMP/geminus-payload.tar.gz.sha256" \
-            --clobber --repo ecer96/GeminusOS
-        echo "subido: https://github.com/ecer96/GeminusOS/releases/tag/$VER"
-    else
-        echo "gh no disponible o sin sesión: paquete local en $TMP"
-    fi
+    # Publicación en GitHub desactivada: solo se genera el paquete local.
+    echo "paquete listo en $TMP (no se publica en GitHub)"
     echo "OK"
 }
 
