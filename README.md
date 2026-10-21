@@ -8,36 +8,36 @@ menú in-game, aplicaciones y ajustes del sistema en una sola imagen.
 
 ## Descarga
 
-La imagen está en **[Releases](https://github.com/ecer96/GeminusOS/releases/tag/v1)**:
+La imagen está en **[Releases](https://github.com/ecer96/GeminusOS/releases/tag/v1.1)**:
 
 | Archivo | Tamaño | SHA-256 |
 |---|---|---|
-| `GeminusOS-v1.img.zst` | 1,7 GB | `f4c950c3f61e224d40491465f7aae7954840c7bc719c2d7bc436cb6b1553a59e` |
+| `GeminusOS-v1.1.img.zst` | 1,7 GB | `40bcf0d689fc9c35124b1946469c5e688d665a1e5d5da5995d16ca784ab08674` |
 
 La imagen descomprimida ocupa 15,5 GB. Necesitas una microSD de **16 GB como
 mínimo** (se recomienda 32 GB).
 
 ## Instalación
 
-1. Descarga `GeminusOS-v1.img.zst`.
+1. Descarga `GeminusOS-v1.1.img.zst`.
 2. Verifica el SHA-256:
 
    ```bash
-   sha256sum GeminusOS-v1.img.zst
+   sha256sum GeminusOS-v1.1.img.zst
    ```
 
 3. Descomprime:
 
    ```bash
-   zstd -d GeminusOS-v1.img.zst
+   zstd -d GeminusOS-v1.1.img.zst
    ```
 
    También puedes usar 7-Zip (con soporte Zstandard) o `unzstd`.
 
-4. Flashea `GeminusOS-v1.img` en la microSD con **balenaEtcher**, **Rufus** o:
+4. Flashea `GeminusOS-v1.1.img` en la microSD con **balenaEtcher**, **Rufus** o:
 
    ```bash
-   sudo dd if=GeminusOS-v1.img of=/dev/sdX bs=4M status=progress conv=fsync
+   sudo dd if=GeminusOS-v1.1.img of=/dev/sdX bs=4M status=progress conv=fsync
    ```
 
    > Sustituye `/dev/sdX` por tu tarjeta. **Se borrará todo su contenido.**
