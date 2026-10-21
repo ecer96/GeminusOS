@@ -1,0 +1,102 @@
+#!/bin/bash
+# geminus-run.sh - Despachador del launcher GeminusOS
+# Reemplaza a dmenu_ln del firmware.
+#
+# Flujo:
+#   1. Lanza geminuslauncher
+#   2. Si geminuslauncher escribió /mnt/data/geminus_next, ejecuta el comando
+#   3. Espera a que termine
+#   4. Vuelve a lanzar geminuslauncher
+#   5. Repite hasta que exista /tmp/stopAPP.ini
+#
+# Si el emulador es RetroArch, lanza el panel de juego (geminus-inpanel) en la
+# pantalla inferior y habilita los comandos de red de RetroArch (UDP 55355).
+
+LAUNCHER="/mnt/vendor/ctrl/geminuslauncher"
+PANEL="/mnt/vendor/ctrl/geminus-inpanel"
+RA_CFG_DIR="/.config/retroarch"
+NEXT="/mnt/data/geminus_next"
+STOP="/tmp/stopAPP.ini"
+LOG="/tmp/geminus-run.log"
+
+PANEL_PID=""
+
+log() {
+    echo "[$(date '+%H:%M:%S')] $*" >> "$LOG"
+}
+
+# Habilita network_cmd en todos los configs de RetroArch (idempotente).
+panel_enable_net() {
+    for f in "$RA_CFG_DIR"/retroarch.cfg "$RA_CFG_DIR"/retroarch_*.cfg; do
+        [ -f "$f" ] || continue
+        sed -i 's/^network_cmd_enable = .*/network_cmd_enable = "true"/' "$f" 2>/dev/null
+        grep -q '^network_cmd_enable' "$f" || echo 'network_cmd_enable = "true"' >> "$f"
+        # guarda el estado al salir (para el quick resume / Continuar)
+        sed -i 's/^savestate_auto_save = .*/savestate_auto_save = "true"/' "$f" 2>/dev/null
+        grep -q '^savestate_auto_save' "$f" || echo 'savestate_auto_save = "true"' >> "$f"
+    done
+}
+
+panel_start() {
+    panel_enable_net
+    if [ -x "$PANEL" ]; then
+        setsid "$PANEL" </dev/null >/tmp/geminus-inpanel.log 2>&1 &
+        PANEL_PID=$!
+        log "panel iniciado (pid=$PANEL_PID)"
+    fi
+}
+
+panel_stop() {
+    if [ -n "$PANEL_PID" ]; then
+        kill "$PANEL_PID" 2>/dev/null
+        PANEL_PID=""
+    fi
+    pkill -f "geminus-inpanel" 2>/dev/null
+    log "panel detenido"
+}
+
+log "=== geminus-run.sh iniciado ==="
+
+while [ ! -f "$STOP" ]; do
+    log "lanzando launcher..."
+
+    # Lanzar el launcher
+    "$LAUNCHER"
+    RC=$?
+
+    log "launcher salió con RC=$RC"
+
+    # ¿El launcher pidió lanzar un juego?
+    if [ -f "$NEXT" ]; then
+        CMD=$(cat "$NEXT")
+        rm -f "$NEXT"
+
+        log "ejecutando: $CMD"
+
+        # Ejecutar el comando del emulador SIN el launcher activo
+        # (así el display queda libre)
+        if echo "$CMD" | grep -q "RA_launch.sh"; then
+            panel_start
+            eval "$CMD"
+            EMU_RC=$?
+            panel_stop
+        else
+            eval "$CMD"
+            EMU_RC=$?
+        fi
+
+        log "emulador terminó con RC=$EMU_RC"
+
+        # Pausa para que el display se estabilice
+        sleep 1
+
+        # Volver a lanzar el launcher (continue del while)
+        continue
+    fi
+
+    # No hay juego pendiente: salir del bucle
+    log "sin juego pendiente, saliendo"
+    break
+done
+
+log "=== geminus-run.sh terminado ==="

@@ -1,0 +1,19 @@
+#!/bin/sh
+# GeminusOS: WiFi listo y gestionado por NetworkManager, SIN bloquear el arranque.
+# Todas las llamadas a nmcli van con timeout: si NM no responde, se sigue.
+/sbin/rfkill unblock all >/dev/null 2>&1
+/sbin/rfkill unblock wifi >/dev/null 2>&1
+if ! grep -qw RTL8821CS /proc/modules 2>/dev/null; then
+    /sbin/insmod /lib/modules/RTL8821CS.ko >/dev/null 2>&1 || \
+    /sbin/modprobe RTL8821CS >/dev/null 2>&1
+fi
+sleep 1
+# wlan0 aparece pero NM lo deja "unmanaged": forzarlo (con timeout, nunca colgar).
+i=0
+while [ $i -lt 3 ]; do
+    timeout 5 /usr/bin/nmcli device set wlan0 managed yes >/dev/null 2>&1 && break
+    i=$((i+1)); sleep 1
+done
+timeout 5 /usr/bin/nmcli radio wifi on >/dev/null 2>&1
+timeout 8 /usr/bin/nmcli device wifi rescan >/dev/null 2>&1
+exit 0

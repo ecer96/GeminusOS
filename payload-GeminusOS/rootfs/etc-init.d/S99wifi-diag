@@ -1,0 +1,16 @@
+#!/bin/sh
+# GeminusOS: diagnostico de WiFi en la particion vendor. Nunca bloquea el arranque.
+OUT=/mnt/vendor/wifi-diag.txt
+{
+  echo "=== $(date) ==="
+  echo "--- state wlan0 ---"; timeout 5 /usr/bin/nmcli -f GENERAL.STATE,GENERAL.STATE-REASON device show wlan0 2>&1 | head -10
+  echo "--- nmcli device ---"; timeout 5 /usr/bin/nmcli device status 2>&1 | head -8
+  echo "--- wifi list ---"; timeout 10 /usr/bin/nmcli -t -f SSID,SIGNAL device wifi list 2>&1 | head -10
+  echo "--- wpa_cli status ---"; timeout 3 /sbin/wpa_cli -i wlan0 status 2>&1 | head -8
+  echo "--- wpa_cli scan ---"; timeout 5 /sbin/wpa_cli -i wlan0 scan_results 2>&1 | head -10
+  echo "--- lsmod ---"; grep -E "RTL|8821" /proc/modules 2>/dev/null
+  echo "--- rfkill ---"; /sbin/rfkill list 2>/dev/null
+  echo "--- dmesg ---"; dmesg 2>/dev/null | grep -iE "wlan|sdio|8821|rtl" | tail -15
+} > "$OUT" 2>&1
+sync
+exit 0

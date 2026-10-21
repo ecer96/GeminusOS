@@ -1,0 +1,18 @@
+# --- Repos con su propio remoto (no duplicar aqui) ---
+/GeminusOSLauncher/
+/menu-drastic/
+/drastic-shader/
+
+# --- Artefactos pesados (imagen, SDK, copias de particiones) ---
+*.img
+*.img.zst
+/umfeld-rocknix-h700-sdk/
+/bootpart-backup.bin
+/payload-GeminusOS/boot/*.bin
+
+# --- Basura de compilacion / sistema ---
+build/
+*.o
+*.so.bak*
+*~
+.DS_Store

@@ -1,0 +1,9 @@
+#!/bin/sh
+# GeminusOS: vigilante MTP. Detecta el cable USB (extcon USB=1) y monta el
+# gadget + umtprd automaticamente. No depende del launcher ni de NM.
+[ -x /mnt/vendor/ctrl/mtp-watch.sh ] || exit 0
+if [ -f /tmp/mtp-watch.pid ] && kill -0 "$(cat /tmp/mtp-watch.pid 2>/dev/null)" 2>/dev/null; then
+    exit 0
+fi
+( /mnt/vendor/ctrl/mtp-watch.sh >/dev/null 2>&1 & )
+exit 0
