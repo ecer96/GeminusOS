@@ -25,7 +25,7 @@ af9a182d628a3c14a96f387f653bd0ae  ./vendor/ctrl/apps/youtube.conf
 b0d7ba4a1dc9cf89693160c701e6cdb4  ./vendor/ctrl/apps/yt-dlp
 a9d2b0d3b9148b37c0914abbe1704279  ./vendor/ctrl/dmenu_ln
 dcd605c963b46bceeb2bfb7f64b418fb  ./vendor/ctrl/geminuslauncher
-8ec3b616eb164558f280620093a52daf  ./vendor/ctrl/geminus-yt-panel
+bd04afedfe30cc86869de65a7a14b1bf  ./vendor/ctrl/geminus-yt-panel
 81bfe439e0e0017213c0696053427bf6  ./vendor/ctrl/icons_grid/apps.png
 2053882356d53dc9fe241438ab2e2575  ./vendor/ctrl/icons_grid/browser.png
 544c51929bc1292118ce229e606ef927  ./vendor/ctrl/icons_grid/dc.png
