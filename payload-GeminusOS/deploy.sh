@@ -80,6 +80,14 @@ else
     echo "=== 4-7. rootfs OMITIDO (no se paso el punto de montaje) ==="
 fi
 
+if [ -n "$SDCARD" ] && [ -d "$SDCARD" ]; then
+    echo "=== 9. SD: roms/APPS (apps de la consola) ==="
+    mkdir -p "$SDCARD/roms/APPS"
+    cp -rf "$HERE/sdcard-apps/." "$SDCARD/roms/APPS/"
+    chmod 755 "$SDCARD/roms/APPS"/*.sh "$SDCARD/roms/APPS"/yt-dlp 2>/dev/null
+    echo "  $(ls "$SDCARD/roms/APPS" | wc -l) ficheros"
+fi
+
 sync
 echo
 echo "Instalado en $DEST${ROOT:+ y $ROOT}"
