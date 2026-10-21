@@ -17,7 +17,8 @@ TS="$(date +%Y%m%d-%H%M%S)"
 echo "=== 1. vendor/ctrl ==="
 mkdir -p "$DEST/ctrl"
 for f in geminuslauncher geminus-yt-panel youtube.sh yt-bridge.py dmenu_ln menu-drastic \
-         libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh; do
+         libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh \
+         geminus-update.py version; do
     src="$HERE/vendor/ctrl/$f"
     [ -f "$src" ] || { echo "  falta $src"; exit 1; }
     cp -f "$src" "$DEST/ctrl/$f"; chmod 755 "$DEST/ctrl/$f"
@@ -27,7 +28,7 @@ done
     echo "=== 1b. vendor/ctrl/icons_grid + ui ==="
     for d in icons_grid ui apps; do
         mkdir -p "$DEST/ctrl/$d"
-        cp -f "$HERE/vendor/ctrl/$d"/* "$DEST/ctrl/$d"/ 2>/dev/null
+        cp -rf "$HERE/vendor/ctrl/$d/." "$DEST/ctrl/$d"/ 2>/dev/null || true
         chmod 644 "$DEST/ctrl/$d"/* 2>/dev/null
         echo "  $d ($(ls "$DEST/ctrl/$d" | wc -l) ficheros)"
     done
@@ -37,6 +38,17 @@ mkdir -p "$DEST/deep/nds-emu"
 cp -f "$HERE/vendor/deep/nds-emu/nds_emu" "$DEST/deep/nds-emu/nds_emu"
 chmod 755 "$DEST/deep/nds-emu/nds_emu"
 echo "  nds_emu"
+
+echo "=== 2b. vendor/ctrl/locale ==="
+DATA="${GEMINUS_DATA:-/mnt/data}"
+for l in es en; do
+    if [ -f "$HERE/vendor/ctrl/locale/$l/LC_MESSAGES/geminuslauncher.mo" ]; then
+        mkdir -p "$DATA/locale/$l/LC_MESSAGES"
+        cp -f "$HERE/vendor/ctrl/locale/$l/LC_MESSAGES/geminuslauncher.mo" \
+              "$DATA/locale/$l/LC_MESSAGES/geminuslauncher.mo"
+        echo "  $l"
+    fi
+done
 
 echo "=== 3. vendor/logos y resources ==="
 mkdir -p "$DEST/ctrl/waiting"

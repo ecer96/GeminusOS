@@ -6,6 +6,7 @@
 #   ./deploy-all.sh console [root@IP]      # compila y despliega por SSH
 #   ./deploy-all.sh image <imagen.img>     # compila y escribe en una imagen
 #   ./deploy-all.sh sd /dev/sdX            # compila y escribe en una SD
+#   ./deploy-all.sh package [vX]           # empaqueta el payload y lo sube al release
 #
 #   Opciones: --no-boot   no tocar la particion de arranque (p3)
 #
@@ -71,6 +72,12 @@ build_all() {
     cp -f "$LAUNCHER/apps/"*.sh "$LAUNCHER/apps/"*.py "$LAUNCHER/apps/"*.conf \
           "$LAUNCHER/apps/yt-dlp" "$PAYLOAD/vendor/ctrl/apps/" 2>/dev/null || true
     cp -rf "$LAUNCHER/apps/media/." "$PAYLOAD/vendor/ctrl/apps/media/" 2>/dev/null || true
+    cp -f "$ROOT/system-scripts/geminus-update.py" "$PAYLOAD/vendor/ctrl/geminus-update.py"
+    cp -f "$ROOT/VERSION" "$PAYLOAD/vendor/ctrl/version"
+    chmod 755 "$PAYLOAD/vendor/ctrl/geminus-update.py"
+    chmod 644 "$PAYLOAD/vendor/ctrl/version"
+    mkdir -p "$PAYLOAD/vendor/ctrl/locale"
+    cp -rf "$LAUNCHER/locale/es" "$LAUNCHER/locale/en" "$PAYLOAD/vendor/ctrl/locale/"
     chmod 755 "$PAYLOAD/vendor/ctrl/apps/"*.sh "$PAYLOAD/vendor/ctrl/apps/yt-dlp" 2>/dev/null || true
     ( cd "$PAYLOAD" && find . -type f ! -name MD5SUMS ! -name deploy.sh -exec md5sum {} \; | sort -k2 > MD5SUMS )
     echo "payload: $(wc -l < "$PAYLOAD/MD5SUMS") ficheros"
@@ -110,6 +117,44 @@ deploy_fs() {
     echo "OK"
 }
 
+# ---------------------------------------------------------------- paquete OTA
+package_payload() {
+    local VER="${1:-$(cat "$ROOT/VERSION" 2>/dev/null || echo v1)}"
+    VER="${VER#v}"; VER="v$VER"
+
+    msg "Empaquetando payload $VER"
+    echo "$VER" > "$ROOT/VERSION"
+    echo "$VER" > "$PAYLOAD/vendor/ctrl/version"
+
+    local TMP="$ROOT/.package"
+    rm -rf "$TMP"; mkdir -p "$TMP"
+    tar -C "$PAYLOAD" -czf "$TMP/geminus-payload.tar.gz" .
+    ( cd "$TMP" && sha256sum geminus-payload.tar.gz > geminus-payload.tar.gz.sha256 )
+
+    local SZ
+    SZ="$(du -h "$TMP/geminus-payload.tar.gz" | cut -f1)"
+    echo "paquete: $TMP/geminus-payload.tar.gz ($SZ)"
+    cat "$TMP/geminus-payload.tar.gz.sha256"
+
+    if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+        msg "Subiendo $VER a GitHub"
+        if ! gh release view "$VER" --repo ecer96/GeminusOS >/dev/null 2>&1; then
+            gh release create "$VER" --repo ecer96/GeminusOS \
+                --title "GeminusOS $VER" \
+                --notes "Actualización de GeminusOS $VER. Instalable desde Ajustes > Actualizar." \
+                || die "no se pudo crear el release $VER"
+        fi
+        gh release upload "$VER" \
+            "$TMP/geminus-payload.tar.gz" \
+            "$TMP/geminus-payload.tar.gz.sha256" \
+            --clobber --repo ecer96/GeminusOS
+        echo "subido: https://github.com/ecer96/GeminusOS/releases/tag/$VER"
+    else
+        echo "gh no disponible o sin sesión: paquete local en $TMP"
+    fi
+    echo "OK"
+}
+
 deploy_image() {
     local IMG="${1:-}"; [ -f "$IMG" ] || die "uso: $0 image <imagen.img>"
     msg "Montando $IMG"
@@ -138,6 +183,7 @@ deploy_sd() {
 # ---------------------------------------------------------------- main
 case "$MODE" in
     build)   build_all ;;
+    package) build_all; package_payload "${ARGS[1]:-}" ;;
     console) build_all; deploy_console "${ARGS[1]:-root@192.168.1.36}" ;;
     image)   build_all; deploy_image "${ARGS[1]:-}" ;;
     sd)      build_all; deploy_sd "${ARGS[1]:-}" ;;

@@ -16,3 +16,9 @@ build/
 *.so.bak*
 *~
 .DS_Store
+
+# --- Paquetes OTA y artefactos generados ---
+/.package/
+*.img.zst
+__pycache__/
+*.pyc
