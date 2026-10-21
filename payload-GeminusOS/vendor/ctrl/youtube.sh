@@ -115,9 +115,15 @@ play_url() {
 }
 
 # ---------------------------------------------------------------- supervisor
+panel_alive() {
+    [ -n "$PANEL_PID" ] || return 1
+    [ -r "/proc/$PANEL_PID/status" ] || return 1
+    ! grep -q '^State:.*Z' "/proc/$PANEL_PID/status" 2>/dev/null
+}
+
 if [ -n "$PANEL_PID" ]; then
     LAST=""
-    while kill -0 "$PANEL_PID" 2>/dev/null; do
+    while panel_alive; do
         if [ -f "$CHOSEN" ]; then
             U="$(cat "$CHOSEN" 2>/dev/null)"
             if [ -n "$U" ] && [ "$U" != "$LAST" ]; then
