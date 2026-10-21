@@ -67,11 +67,11 @@ build_all() {
     cp -f "$LAUNCHER/assets/brand/geminus_word.png" \
           "$LAUNCHER/assets/brand/geminus_word_dark.png" "$PAYLOAD/vendor/ctrl/ui/"
     chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
-    mkdir -p "$PAYLOAD/sdcard-apps"
+    mkdir -p "$PAYLOAD/vendor/ctrl/apps"
     cp -f "$LAUNCHER/apps/"*.sh "$LAUNCHER/apps/"*.py "$LAUNCHER/apps/"*.conf \
-          "$LAUNCHER/apps/yt-dlp" "$PAYLOAD/sdcard-apps/" 2>/dev/null || true
-    cp -rf "$LAUNCHER/apps/media/." "$PAYLOAD/sdcard-apps/media/" 2>/dev/null || true
-    chmod 755 "$PAYLOAD/sdcard-apps/"*.sh "$PAYLOAD/sdcard-apps/yt-dlp" 2>/dev/null || true
+          "$LAUNCHER/apps/yt-dlp" "$PAYLOAD/vendor/ctrl/apps/" 2>/dev/null || true
+    cp -rf "$LAUNCHER/apps/media/." "$PAYLOAD/vendor/ctrl/apps/media/" 2>/dev/null || true
+    chmod 755 "$PAYLOAD/vendor/ctrl/apps/"*.sh "$PAYLOAD/vendor/ctrl/apps/yt-dlp" 2>/dev/null || true
     ( cd "$PAYLOAD" && find . -type f ! -name MD5SUMS ! -name deploy.sh -exec md5sum {} \; | sort -k2 > MD5SUMS )
     echo "payload: $(wc -l < "$PAYLOAD/MD5SUMS") ficheros"
 }
@@ -83,7 +83,7 @@ deploy_console() {
     tar -C "$PAYLOAD" -czf - . | ssh -o StrictHostKeyChecking=no "$DEST" \
         'rm -rf /tmp/geminus-payload && mkdir -p /tmp/geminus-payload && tar -C /tmp/geminus-payload -xzf -'
     ssh -o StrictHostKeyChecking=no "$DEST" \
-        'sh /tmp/geminus-payload/deploy.sh /mnt/vendor / /mnt/sdcard && sync'
+        'sh /tmp/geminus-payload/deploy.sh /mnt/vendor / && sync'
     msg "Reiniciando el launcher"
     ssh -o StrictHostKeyChecking=no "$DEST" '
         ps -o pid,comm | awk "\$2 ~ /geminuslauncher|dmenu/ {print \$1}" | xargs -r kill -9 2>/dev/null
@@ -98,10 +98,10 @@ deploy_console() {
 
 # ---------------------------------------------------------------- imagen / SD
 deploy_fs() {
-    local VENDOR="$1" ROOTFS="$2" BOOTPART="$3" SDCARD="$4"
+    local VENDOR="$1" ROOTFS="$2" BOOTPART="$3"
     [ -d "$VENDOR" ] || die "$VENDOR no existe"
     msg "Instalando payload en $VENDOR ($ROOTFS)"
-    "$PAYLOAD/deploy.sh" "$VENDOR" "$ROOTFS" "$SDCARD"
+    "$PAYLOAD/deploy.sh" "$VENDOR" "$ROOTFS"
     if [ "$DO_BOOT" = 1 ] && [ -n "$BOOTPART" ] && [ -f "$BOOT_IMG" ]; then
         msg "Escribiendo logo de arranque en $BOOTPART"
         sudo dd if="$BOOT_IMG" of="$BOOTPART" bs=4M conv=fsync status=progress
@@ -117,12 +117,10 @@ deploy_image() {
     LOOP="$(sudo losetup -Pf --show "$IMG")"
     trap 'sudo umount /tmp/geminus-mnt/* 2>/dev/null; sudo losetup -d '"$LOOP"' 2>/dev/null' EXIT
     sudo mkdir -p /tmp/geminus-mnt/{vendor,rootfs}
-    sudo mkdir -p /tmp/geminus-mnt/sdcard
     sudo mount "${LOOP}p8" /tmp/geminus-mnt/vendor
     sudo mount "${LOOP}p6" /tmp/geminus-mnt/rootfs
-    sudo mount "${LOOP}p11" /tmp/geminus-mnt/sdcard 2>/dev/null || true
-    deploy_fs /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs "${LOOP}p3" /tmp/geminus-mnt/sdcard
-    sudo umount /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs /tmp/geminus-mnt/sdcard 2>/dev/null || true
+    deploy_fs /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs "${LOOP}p3"
+    sudo umount /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs 2>/dev/null || true
     sudo losetup -d "$LOOP"
     trap - EXIT
 }
@@ -131,12 +129,10 @@ deploy_sd() {
     local DEV="${1:-}"; [ -b "$DEV" ] || die "uso: $0 sd /dev/sdX"
     msg "Montando ${DEV}8 / ${DEV}6"
     sudo mkdir -p /tmp/geminus-mnt/{vendor,rootfs}
-    sudo mkdir -p /tmp/geminus-mnt/sdcard
     sudo mount "${DEV}8" /tmp/geminus-mnt/vendor
     sudo mount "${DEV}6" /tmp/geminus-mnt/rootfs
-    sudo mount "${DEV}11" /tmp/geminus-mnt/sdcard 2>/dev/null || true
-    deploy_fs /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs "${DEV}3" /tmp/geminus-mnt/sdcard
-    sudo umount /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs /tmp/geminus-mnt/sdcard 2>/dev/null || true
+    deploy_fs /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs "${DEV}3"
+    sudo umount /tmp/geminus-mnt/vendor /tmp/geminus-mnt/rootfs 2>/dev/null || true
 }
 
 # ---------------------------------------------------------------- main

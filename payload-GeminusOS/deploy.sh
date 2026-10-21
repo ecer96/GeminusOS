@@ -25,7 +25,7 @@ for f in geminuslauncher geminus-yt-panel youtube.sh yt-bridge.py dmenu_ln menu-
 done
 
     echo "=== 1b. vendor/ctrl/icons_grid + ui ==="
-    for d in icons_grid ui; do
+    for d in icons_grid ui apps; do
         mkdir -p "$DEST/ctrl/$d"
         cp -f "$HERE/vendor/ctrl/$d"/* "$DEST/ctrl/$d"/ 2>/dev/null
         chmod 644 "$DEST/ctrl/$d"/* 2>/dev/null
@@ -65,6 +65,11 @@ if [ -n "$ROOT" ] && [ -d "$ROOT" ]; then
     cp -f "$HERE/rootfs/usr-bin/wifi-dhcp-watch.sh" "$ROOT/usr/bin/wifi-dhcp-watch.sh"; chmod 755 "$ROOT/usr/bin/wifi-dhcp-watch.sh"
     echo "  umtprd + usb-mtp-on.sh + wifi-dhcp-watch.sh"
 
+    echo "=== 5b. rootfs: umtprd (MTP limitado a SD + Datos) ==="
+    mkdir -p "$ROOT/etc/umtprd"
+    cp -f "$HERE/rootfs/etc-umtprd/umtprd.conf" "$ROOT/etc/umtprd/umtprd.conf"
+    echo "  umtprd.conf"
+
     echo "=== 6. rootfs: NetworkManager ==="
     sed -i 's/^plugins=ifupdown,keyfile/plugins=keyfile/' "$ROOT/etc/NetworkManager/NetworkManager.conf" 2>/dev/null || true
     mkdir -p "$ROOT/etc/NetworkManager/conf.d"
@@ -78,14 +83,6 @@ if [ -n "$ROOT" ] && [ -d "$ROOT" ]; then
     echo "  logo_kernel.bmp + logo.bmp"
 else
     echo "=== 4-7. rootfs OMITIDO (no se paso el punto de montaje) ==="
-fi
-
-if [ -n "$SDCARD" ] && [ -d "$SDCARD" ]; then
-    echo "=== 9. SD: roms/APPS (apps de la consola) ==="
-    mkdir -p "$SDCARD/roms/APPS"
-    cp -rf "$HERE/sdcard-apps/." "$SDCARD/roms/APPS/"
-    chmod 755 "$SDCARD/roms/APPS"/*.sh "$SDCARD/roms/APPS"/yt-dlp 2>/dev/null
-    echo "  $(ls "$SDCARD/roms/APPS" | wc -l) ficheros"
 fi
 
 sync

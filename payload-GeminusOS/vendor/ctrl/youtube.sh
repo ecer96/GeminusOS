@@ -92,8 +92,15 @@ if [ "$(date +%Y)" -lt 2024 ]; then
 fi
 
 # 2) Objetivo: config actual, config antigua y respaldo neutro.
-TARGET="${YT_TARGET:-}"
+# Prioridad: argumento ($1) > YT_TARGET > youtube.conf > defecto.
+# Asi se puede buscar cualquier cosa:  youtube.sh "dragon ball openings"
+TARGET="${1:-${YT_TARGET:-}}"
 CONF_USED=""
+# Sin argumento: preguntar en la pantalla de abajo (teclado en pantalla).
+if [ -z "$TARGET" ] && [ -x /mnt/vendor/ctrl/geminus-yt-panel ]; then
+    Q="$(/mnt/vendor/ctrl/geminus-yt-panel --search 2>>"$LOG" | tail -n1)"
+    if [ -n "$Q" ]; then TARGET="$Q"; CONF_USED="búsqueda"; fi
+fi
 if [ -z "$TARGET" ]; then
     for c in /mnt/sdcard/ecerOS/youtube.conf \
              /mnt/sdcard/GeminusOS/youtube.conf \
