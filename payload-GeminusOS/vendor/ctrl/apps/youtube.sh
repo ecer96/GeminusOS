@@ -51,7 +51,8 @@ if [ -n "$SNK" ]; then
 fi
 
 resolve() {
-    timeout 60 "$YTDLP" --no-warnings --no-playlist -f "$FMT" -g "$1" 2>>"$LOG" | head -n2
+    timeout 60 "$YTDLP" --no-warnings --no-playlist -f "$FMT" \
+        --print "%(title)s" -g "$1" 2>>"$LOG" | head -n3
 }
 
 play() {
@@ -64,7 +65,7 @@ play() {
             --force-window=yes --osd-level=1 --osd-duration=3000 \
             --term-status-msg= \
             --input-ipc-server="$SOCK" --input-default-bindings=no \
-            --title="YouTube" --audio-file="$3" "$1" >>"$LOG" 2>&1 &
+            --title="${4:-YouTube}" --audio-file="$3" "$1" >>"$LOG" 2>&1 &
     else
         mpv --no-config --fullscreen --fs-screen=1 \
             --vo="$2" --gpu-context=wayland --hwdec=auto-safe \
@@ -73,7 +74,7 @@ play() {
             --force-window=yes --osd-level=1 --osd-duration=3000 \
             --term-status-msg= \
             --input-ipc-server="$SOCK" --input-default-bindings=no \
-            --title="YouTube" "$1" >>"$LOG" 2>&1 &
+            --title="${4:-YouTube}" "$1" >>"$LOG" 2>&1 &
     fi
     MPV_PID=$!
 
@@ -83,7 +84,7 @@ play() {
         waited=$((waited+1))
     done
     if [ -S "$SOCK" ]; then
-        status "Reproduciendo"
+        if [ -n "$4" ]; then status "Reproduciendo: $4"; else status "Reproduciendo"; fi
         python3 "$BRIDGE" "$SOCK" "$STATE" >/tmp/yt-bridge.log 2>&1 &
         BR=$!
         wait "$MPV_PID"
@@ -103,8 +104,9 @@ play_url() {
     log "resolver: $1"
     status "Resolviendo video..."
     RES="$(resolve "$1")"
-    VID="$(printf '%s\n' "$RES" | sed -n '1p')"
-    AUD="$(printf '%s\n' "$RES" | sed -n '2p')"
+    TITLE="$(printf '%s\n' "$RES" | sed -n '1p' | cut -c1-55)"
+    VID="$(printf '%s\n' "$RES" | sed -n '2p')"
+    AUD="$(printf '%s\n' "$RES" | sed -n '3p')"
     if [ -z "$VID" ]; then
         status "No se pudo resolver el video"
         log "yt-dlp no devolvio stream"
@@ -112,12 +114,12 @@ play_url() {
     fi
 
     T0=$(date +%s)
-    play "$VID" gpu "$AUD"
+    play "$VID" gpu "$AUD" "$TITLE"
     RC=$?
     # Si el contexto GPU falla de inmediato, reintento por software.
     if [ $RC -ne 0 ] && [ $(( $(date +%s) - T0 )) -lt 3 ]; then
         log "vo=gpu fallo rapido; reintento con wlshm"
-        play "$VID" wlshm "$AUD"
+        play "$VID" wlshm "$AUD" "$TITLE"
     fi
     status "Elige otro video o pulsa Buscar"
 }
