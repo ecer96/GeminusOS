@@ -57,16 +57,42 @@ fi
 log "stream resuelto (audio separado: $([ -n "$AUD" ] && echo si || echo no))"
 printf '%s\n' "Reproduciendo" > /tmp/youtube-status
 
-# Audio por PulseAudio (sink del amplificador); imagen en salida superior.
+# Audio por PulseAudio; volumen inicial moderado y socket IPC.
 SNK=$(XDG_RUNTIME_DIR=/var/run pactl list short sinks 2>/dev/null | awk '/stereo-fallback/ {print $2; exit}')
 [ -n "$SNK" ] && export PULSE_SINK="$SNK"
+SOCK=/tmp/mpv-youtube.sock
+rm -f "$SOCK"
+
 if [ -n "$AUD" ]; then
-    exec mpv --no-config --fullscreen --fs-screen=0 --keep-open=no \
+    mpv --no-config --fullscreen --fs-screen=0 --keep-open=no \
         --hwdec=auto-safe --vo=gpu --gpu-context=wayland \
-        --cache=yes --demuxer-readahead-secs=8 --mute=yes \
-        --audio-file="$AUD" --title="YouTube" "$VID"
+        --cache=yes --demuxer-readahead-secs=8 --mute=no --volume=25 \
+        --audio-file="$AUD" --input-ipc-server="$SOCK" \
+        --title="YouTube" "$VID" >>"$LOG" 2>&1 &
 else
-    exec mpv --no-config --fullscreen --fs-screen=0 --keep-open=no \
+    mpv --no-config --fullscreen --fs-screen=0 --keep-open=no \
         --hwdec=auto-safe --vo=gpu --gpu-context=wayland \
-        --cache=yes --demuxer-readahead-secs=8 --mute=yes --title="YouTube" "$VID"
+        --cache=yes --demuxer-readahead-secs=8 --mute=no --volume=25 \
+        --input-ipc-server="$SOCK" --title="YouTube" "$VID" >>"$LOG" 2>&1 &
 fi
+MPV=$!
+
+i=0
+while [ $i -lt 50 ] && [ ! -S "$SOCK" ] && kill -0 "$MPV" 2>/dev/null; do
+    sleep 0.1
+    i=$((i+1))
+done
+BR=""
+if [ -S "$SOCK" ]; then
+    log "mpv listo; bridge de mando activo"
+    python3 "$CTRL/yt-bridge.py" "$SOCK" >/tmp/yt-bridge.log 2>&1 &
+    BR=$!
+else
+    log "mpv no creo socket IPC"
+fi
+wait "$MPV"
+RC=$?
+[ -n "$BR" ] && kill "$BR" 2>/dev/null
+rm -f "$SOCK"
+log "mpv termino rc=$RC"
+exit "$RC"

@@ -30,6 +30,7 @@ EV_ABS = 0x03
 K_A, K_B, K_Y, K_X = 0x130, 0x131, 0x132, 0x133
 K_SELECT, K_START, K_MENU = 0x136, 0x137, 0x138
 K_L1, K_R1 = 0x134, 0x135
+K_VOL_DOWN, K_VOL_UP = 0x72, 0x73
 
 # Ejes de cruceta (Rockchip): ABS_HAT0X / ABS_HAT0Y
 ABS_HAT0X, ABS_HAT0Y = 0x10, 0x11
@@ -139,6 +140,10 @@ def main():
                         mpv.cmd("seek", 10, "relative")
                     elif code == K_SELECT:
                         mpv.cmd("cycle", "mute")
+                    elif code == K_VOL_DOWN:
+                        mpv.cmd("add", "volume", -5)
+                    elif code == K_VOL_UP:
+                        mpv.cmd("add", "volume", 5)
                 elif etype == EV_ABS:
                     if code == ABS_HAT0X and value != 0:
                         mpv.cmd("seek", -5 if value < 0 else 5, "relative")
