@@ -57,17 +57,28 @@ build_all() {
     mkdir -p "$PAYLOAD/vendor/ctrl"
     cp -f "$LAUNCHER/build/geminuslauncher"      "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/build/geminus-yt-panel"     "$PAYLOAD/vendor/ctrl/"
+    cp -f "$LAUNCHER/build/geminus-inpanel"      "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/apps/youtube.sh"            "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/apps/yt-bridge.py"          "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/geminus-run.sh"             "$PAYLOAD/vendor/ctrl/dmenu_ln"
+    cp -f "$LAUNCHER/scrape_libretro.py" \
+          "$LAUNCHER/scrape_screenscraper.py" \
+          "$LAUNCHER/scrape_thegamesdb.py"       "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/menu-drastic"             "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/libmenuhook.so"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/ndsCtrl-libdsflip.sh"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$SHADER/build/libdrastic_shader.so"   "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/assets/icons/png/"*.png     "$PAYLOAD/vendor/ctrl/icons_grid/"
     cp -f "$LAUNCHER/assets/brand/geminus_word.png" \
-          "$LAUNCHER/assets/brand/geminus_word_dark.png" "$PAYLOAD/vendor/ctrl/ui/"
-    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
+          "$LAUNCHER/assets/brand/geminus_word_dark.png" \
+          "$LAUNCHER/assets/brand/geminus_logo.png" \
+          "$LAUNCHER/assets/back_arrow.png" "$LAUNCHER/assets/next_arrow.png" \
+          "$LAUNCHER/assets/back_arrow_metal.png" "$LAUNCHER/assets/next_arrow_metal.png" \
+          "$PAYLOAD/vendor/ctrl/ui/"
+    mkdir -p "$PAYLOAD/vendor/ctrl/fonts"
+    cp -f "$LAUNCHER/assets/fonts/"*.ttf "$PAYLOAD/vendor/ctrl/fonts/" 2>/dev/null || true
+    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
+    chmod 755 "$PAYLOAD/vendor/ctrl/"scrape_*.py
     mkdir -p "$PAYLOAD/vendor/ctrl/apps"
     cp -f "$LAUNCHER/apps/"*.sh "$LAUNCHER/apps/"*.py "$LAUNCHER/apps/"*.conf \
           "$LAUNCHER/apps/"*.dev \

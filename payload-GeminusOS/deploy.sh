@@ -16,9 +16,10 @@ TS="$(date +%Y%m%d-%H%M%S)"
 
 echo "=== 1. vendor/ctrl ==="
 mkdir -p "$DEST/ctrl"
-for f in geminuslauncher geminus-yt-panel youtube.sh yt-bridge.py dmenu_ln menu-drastic \
+for f in geminuslauncher geminus-yt-panel geminus-inpanel youtube.sh yt-bridge.py dmenu_ln menu-drastic \
          libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh \
-         geminus-update.py version; do
+         geminus-update.py version scrape_libretro.py scrape_screenscraper.py \
+         scrape_thegamesdb.py; do
     src="$HERE/vendor/ctrl/$f"
     [ -f "$src" ] || { echo "  falta $src"; exit 1; }
     cp -f "$src" "$DEST/ctrl/$f"; chmod 755 "$DEST/ctrl/$f"
@@ -26,7 +27,7 @@ for f in geminuslauncher geminus-yt-panel youtube.sh yt-bridge.py dmenu_ln menu-
 done
 
     echo "=== 1b. vendor/ctrl/icons_grid + ui ==="
-    for d in icons_grid ui apps; do
+    for d in icons_grid ui apps fonts; do
         mkdir -p "$DEST/ctrl/$d"
         cp -rf "$HERE/vendor/ctrl/$d/." "$DEST/ctrl/$d"/ 2>/dev/null || true
         chmod 644 "$DEST/ctrl/$d"/* 2>/dev/null
