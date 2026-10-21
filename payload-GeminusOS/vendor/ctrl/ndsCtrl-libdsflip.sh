@@ -97,8 +97,11 @@ while true; do
     [ -f "$MENUHOOK" ]  && PRE="$MENUHOOK:$PRE"
     [ -f "$SHADERLIB" ] && PRE="$SHADERLIB:$PRE"
     log "LD_PRELOAD=$PRE"
+    # DSHOOK_MIC_LIVE=1: libmenuhook entrega el micro real a DraStic.
+    # (No definimos DSHOOK_MIC_THRESH: eso activaria el micro duplicado de
+    #  libdrastouch y ambas inyecciones se pelearian.)
     LD_PRELOAD="$PRE" \
-    DSHOOK_MIC_THRESH=0.03 \
+    DSHOOK_MIC_LIVE=1 \
     ./drastic_oga "$1" > "${LOG}.drastic" 2>&1
     RC=$?
     log "DraStic salio con codigo: $RC"
