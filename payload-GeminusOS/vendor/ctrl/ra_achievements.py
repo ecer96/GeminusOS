@@ -23,7 +23,7 @@ def read_cfg():
     return cfg.get("user", "").strip(), cfg.get("key", "").strip()
 
 def api(ep, **q):
-    q.update(z=USER, y=KEY)
+    q.update(u=USER, y=KEY)
     url = "https://retroachievements.org/API/%s?%s" % (ep, urllib.parse.urlencode(q))
     req = urllib.request.Request(url, headers={"User-Agent": "GeminusOS-ra/1.0"})
     with urllib.request.urlopen(req, timeout=30) as r:

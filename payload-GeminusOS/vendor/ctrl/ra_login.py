@@ -93,7 +93,7 @@ def verify_key(user, key):
     if not user or not key:
         return False
     url = "https://retroachievements.org/API/API_GetUserProfile.php?" + urllib.parse.urlencode(
-        {"z": user, "y": key})
+        {"u": user, "y": key})
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=UA),
                                     timeout=30) as r:
