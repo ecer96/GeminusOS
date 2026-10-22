@@ -20,7 +20,8 @@ for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtub
          libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh \
          geminus-update.py version scrape_libretro.py scrape_screenscraper.py \
          scrape_thegamesdb.py ra_login.py ra_sync.py ra_achievements.py \
-         ra_local_export.py ra_local_runtime.lua; do
+         ra_local_export.py ra_local_scan.py ra_local_snapshot.lua ra_local_runtime.lua \
+         geminus-achd geminus-ach-toast geminus-power-watch.py; do
     src="$HERE/vendor/ctrl/$f"
     [ -f "$src" ] || { echo "  falta $src"; exit 1; }
     cp -f "$src" "$DEST/ctrl/$f"; chmod 755 "$DEST/ctrl/$f"

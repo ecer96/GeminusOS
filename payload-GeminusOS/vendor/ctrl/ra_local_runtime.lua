@@ -153,6 +153,13 @@ for _, a in ipairs(ACH) do
     a.supported = ok and #a.groups > 0
 end
 
+local nsup, ntotal = 0, #ACH
+for _, a in ipairs(ACH) do
+    if a.supported then nsup = nsup + 1
+    else print(string.format("GEMINUS_ACH_SKIP|%s|%s", tostring(a.id), tostring(a.title))) end
+end
+print(string.format("GEMINUS_ACH_LOAD|%d|%d", nsup, ntotal))
+
 local function write_event(a)
     local line = string.format("GEMINUS_ACH|%s|%s", tostring(a.id), tostring(a.title))
     print(line)

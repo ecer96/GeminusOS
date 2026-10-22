@@ -49,6 +49,8 @@ build_all() {
 
     msg "Compilando menu-drastic"
     ( cd "$MENU" && GEMINUS_SDK="$SDK" ./build-menu.sh )
+    ( cd "$MENU" && GEMINUS_SDK="$SDK" ./build-achd.sh )
+    ( cd "$MENU" && GEMINUS_SDK="$SDK" ./build-toast.sh )
 
     msg "Compilando drastic-shader"
     ( cd "$SHADER" && GEMINUS_SDK="$SDK" ./build.sh )
@@ -69,9 +71,14 @@ build_all() {
           "$LAUNCHER/ra_sync.py" \
           "$LAUNCHER/ra_achievements.py" \
           "$LAUNCHER/ra_local_export.py" \
+          "$LAUNCHER/ra_local_scan.py" \
+          "$LAUNCHER/ra_local_snapshot.lua" \
           "$LAUNCHER/ra_local_runtime.lua"       "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/menu-drastic"             "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/libmenuhook.so"           "$PAYLOAD/vendor/ctrl/"
+    cp -f "$MENU/build/geminus-achd"             "$PAYLOAD/vendor/ctrl/"
+    cp -f "$MENU/build/geminus-ach-toast"        "$PAYLOAD/vendor/ctrl/"
+    cp -f "$MENU/geminus-power-watch.py"         "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/ndsCtrl-libdsflip.sh"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$SHADER/build/libdrastic_shader.so"   "$PAYLOAD/vendor/ctrl/"
     ( cd "$LAUNCHER/assets/icons" && ./build_grid_sets.sh )
@@ -87,8 +94,9 @@ build_all() {
           "$PAYLOAD/vendor/ctrl/ui/"
     mkdir -p "$PAYLOAD/vendor/ctrl/fonts"
     cp -f "$LAUNCHER/assets/fonts/"*.ttf "$PAYLOAD/vendor/ctrl/fonts/" 2>/dev/null || true
-    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
+    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh,geminus-achd,geminus-ach-toast,geminus-power-watch.py}
     chmod 755 "$PAYLOAD/vendor/ctrl/"scrape_*.py "$PAYLOAD/vendor/ctrl/"ra_*.py
+    chmod 644 "$PAYLOAD/vendor/ctrl/ra_local_snapshot.lua"
     mkdir -p "$PAYLOAD/vendor/ctrl/apps"
     cp -f "$LAUNCHER/apps/"*.sh "$LAUNCHER/apps/"*.py "$LAUNCHER/apps/"*.conf \
           "$LAUNCHER/apps/"*.dev \

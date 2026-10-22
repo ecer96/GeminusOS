@@ -83,6 +83,76 @@ export DSFLIP_COLOR=1
 export DSFLIP_GL=1
 rm -f /tmp/shader-inject.log
 
+# === Vigilante de power/tapa (el launcher no esta activo durante el juego) ===
+PWR_WATCH=/mnt/vendor/ctrl/geminus-power-watch.py
+WPID=""
+if [ -f "$PWR_WATCH" ]; then
+    python3 "$PWR_WATCH" --parent $$ >>"${LOG}.power" 2>&1 &
+    WPID=$!
+    log "power watcher iniciado (pid=$WPID)"
+fi
+
+# === Logros locales (rcheevos) ===
+ACH_DIR=/mnt/data/geminus_ach
+BASE=$(basename "$1"); BASE=${BASE%.*}
+ACH_DEFS="$ACH_DIR/$BASE.defs"
+ACH_TITLES="$ACH_DIR/$BASE.titles"
+ACH_META="$ACH_DIR/$BASE.meta"
+ACH_ADDRS="$ACH_DIR/$BASE.addrs"
+ACH_SIG="$ACH_DIR/$BASE.sig"
+ACH_KEY=/mnt/vendor/ctrl/ach.key
+ACH_LUA="$DDIR/scripts/$BASE.lua"
+ACH_SCAN=/mnt/vendor/ctrl/ra_local_export.py
+ACH_TOAST=/mnt/vendor/ctrl/geminus-ach-toast
+ACHD_PID=""
+
+# Primer lanzamiento: descarga y firma los logros antes de arrancar DraStic.
+# Si falta la firma o la clave NO se re-firman datos existentes: se vuelven a
+# descargar de RetroAchievements (evita re-firmar ficheros manipulados).
+NET_OK=1
+if command -v ip >/dev/null 2>&1; then
+    ip route 2>/dev/null | grep -q '^default ' || NET_OK=0
+fi
+
+if [ -x "$ACH_SCAN" ] && [ ! -f "$ACH_DIR/$BASE.none" ]; then
+    SCAN=0
+    if [ ! -f "$ACH_DEFS" ] || [ ! -f "$ACH_META" ] || [ ! -f "$ACH_ADDRS" ] || \
+       [ ! -f "$ACH_LUA" ] || [ ! -f "$ACH_SIG" ] || [ ! -f "$ACH_KEY" ]; then
+        SCAN=1
+    fi
+    if [ "$SCAN" = "1" ] && { [ "$NET_OK" = "0" ] || \
+       [ ! -f /mnt/sdcard/GeminusOS/retroachievements.cfg ]; }; then
+        log "sin red o sin config RA: se omite el escaneo automatico"
+        SCAN=0
+    fi
+    if [ "$SCAN" != "0" ]; then
+        SPID=""
+        if [ -x "$ACH_TOAST" ]; then
+            "$ACH_TOAST" --label="PREPARANDO LOGROS" \
+                --title="Buscando logros..." --duration=90000 >/dev/null 2>&1 &
+            SPID=$!
+        fi
+        log "escaneo automatico de logros (primera vez / reparacion)"
+        timeout 45 python3 "$ACH_SCAN" "$1" --auto --force >>"$LOG" 2>&1
+        SRC=$?
+        [ -n "$SPID" ] && kill "$SPID" 2>/dev/null
+        log "escaneo/firma de logros rc=$SRC"
+    fi
+fi
+
+rm -f /tmp/geminus_ach_snap.txt*
+if [ -x /mnt/vendor/ctrl/geminus-achd ] && [ -f "$ACH_DEFS" ] && [ -f "$ACH_ADDRS" ]; then
+    ACH_ARGS=(--defs "$ACH_DEFS" --titles "$ACH_TITLES")
+    [ -f "$ACH_META" ] && ACH_ARGS+=(--meta "$ACH_META")
+    /mnt/vendor/ctrl/geminus-achd "${ACH_ARGS[@]}" \
+        --addrs "$ACH_ADDRS" --script "$ACH_LUA" \
+        --snap /tmp/geminus_ach_snap.txt \
+        --events /tmp/geminus_ach_events --tsv /mnt/data/geminus_local_ach.tsv \
+        --parent $$ >>"$LOG" 2>&1 &
+    ACHD_PID=$!
+    log "achd iniciado (pid=$ACHD_PID)"
+fi
+
 # === Lanzar DraStic ===
 RUNS=0
 while true; do
@@ -122,6 +192,18 @@ while true; do
     fi
     break
 done
+
+if [ -n "$ACHD_PID" ]; then
+    kill "$ACHD_PID" 2>/dev/null
+    wait "$ACHD_PID" 2>/dev/null
+    log "achd detenido"
+fi
+
+if [ -n "$WPID" ]; then
+    kill "$WPID" 2>/dev/null
+    wait "$WPID" 2>/dev/null
+    log "power watcher detenido"
+fi
 
 rm -f "$RESTART_FLAG" /tmp/menu-cmd
 echo "calibration:gt9xx-0:clear" > /tmp/.weston_drm.conf
