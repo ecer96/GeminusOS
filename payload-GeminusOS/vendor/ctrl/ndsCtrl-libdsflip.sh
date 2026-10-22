@@ -42,6 +42,8 @@ fi
 sleep 0.3
 
 cd "$DDIR" || exit 1
+mkdir -p "$DDIR/scripts"
+export GEMINUS_NDS_ROM="$1"
 
 # === Configuracion ===
 # 3D multihilo desactivado: en esta consola a veces descoloca las pantallas.

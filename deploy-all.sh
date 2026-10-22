@@ -67,7 +67,9 @@ build_all() {
           "$LAUNCHER/scrape_thegamesdb.py"       "$PAYLOAD/vendor/ctrl/"
     cp -f "$LAUNCHER/ra_login.py" \
           "$LAUNCHER/ra_sync.py" \
-          "$LAUNCHER/ra_achievements.py"         "$PAYLOAD/vendor/ctrl/"
+          "$LAUNCHER/ra_achievements.py" \
+          "$LAUNCHER/ra_local_export.py" \
+          "$LAUNCHER/ra_local_runtime.lua"       "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/menu-drastic"             "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/libmenuhook.so"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/ndsCtrl-libdsflip.sh"           "$PAYLOAD/vendor/ctrl/"
