@@ -11,6 +11,27 @@ ab96cff509b34ffbf9db4f764153c79c  ./rootfs/etc-init.d/S99wifi-diag
 084a9cc39755120f757d5c8c25e81091  ./rootfs/usr-bin/umtprd
 9cdc7476908d6890cdca18cfe57117dc  ./rootfs/usr-bin/usb-mtp-on.sh
 fca8ed1df27ada1d907a587980cca30d  ./rootfs/usr-bin/wifi-dhcp-watch.sh
+2809ed8b425311c10671a4ce513f881c  ./shaders/Geminus CRT.dfx
+351a7a6e64753530f50d700f09ec70e3  ./shaders/Geminus CRT.dsd
+4a25a7c5022462fda2c34a93a4a9c531  ./shaders/Geminus CRT.frag
+814d59bf9d8147829a5b8860cf5ce073  ./shaders/Geminus Cuadritos.dfx
+f844697c3641c905a266af8d0ae8d858  ./shaders/Geminus Cuadritos.dsd
+7eca5f77aade53e6d91bc3f2ca627c5a  ./shaders/Geminus Cuadritos.frag
+414d90c0e97069b48f493f646524d06e  ./shaders/Geminus DS Color.dfx
+aa5f8a2def8ef26486df332961dbd6af  ./shaders/Geminus DS Color.dsd
+0a360a73aa5c19c2560ac14acacd5f72  ./shaders/Geminus DS Color.frag
+6dab8178cf4f45641d5c31d7148e99ee  ./shaders/Geminus FSR.dfx
+e5714ecaa3dcdf73d9dc9707acf14ece  ./shaders/Geminus FSR.dsd
+9256c44338485a728257aef112939e7f  ./shaders/Geminus FSR.frag
+f29e4833b7a09f9c4ac73f718cc48c74  ./shaders/Geminus NDS Grid.dfx
+95cdf0215d08d564cbca30cd27fff6f5  ./shaders/Geminus NDS Grid.dsd
+d83b59074b42abd0da0b60f8703fab3e  ./shaders/Geminus NDS Grid.frag
+b0bebcb0a76dd2c506936e43ce4b1214  ./shaders/Geminus NDS Old LCD.dfx
+2bde60ff2fc334b8aaea59c51a4f6e29  ./shaders/Geminus NDS Old LCD.dsd
+32795011353008d13fbb7f0bd26eac2a  ./shaders/Geminus NDS Old LCD.frag
+ee46500f235abb00be732cad6acbd3c8  ./shaders/Geminus Tubes.dfx
+42155bedbd9b6bd1dc8e12f2a8f29cec  ./shaders/Geminus Tubes.dsd
+9bde11dcbdb30b090d2173e29eed7c13  ./shaders/Geminus Tubes.frag
 fa2b593486199e276f9863f73803637f  ./vendor/ctrl/apps/browser.conf
 3caeb2accaa3bc525c7304744a5e8de2  ./vendor/ctrl/apps/browser.sh
 191d97c3a3a99ffcea0eac68f79e54c1  ./vendor/ctrl/apps/js-quit.py
@@ -25,6 +46,7 @@ af9a182d628a3c14a96f387f653bd0ae  ./vendor/ctrl/apps/youtube.conf
 59dfc4a8d021ce054ddf30c9d018527e  ./vendor/ctrl/apps/yt-bridge.py
 b0d7ba4a1dc9cf89693160c701e6cdb4  ./vendor/ctrl/apps/yt-dlp
 a9d2b0d3b9148b37c0914abbe1704279  ./vendor/ctrl/dmenu_ln
+5de2899c25d8d473813a1c053bd9b6c5  ./vendor/ctrl/ff-hires
 6817d0685418755f63b30bcfa9c425a6  ./vendor/ctrl/fonts/Orbitron-Bold.ttf
 c2879e8261436f92a70753cf8784380a  ./vendor/ctrl/fonts/Rajdhani-Medium.ttf
 199e3623690bf2235928af1c7cc69514  ./vendor/ctrl/fonts/Rajdhani-SemiBold.ttf
@@ -32,7 +54,7 @@ eee8df6044fd059718146d1afe5da4d5  ./vendor/ctrl/geminus-achd
 fd996cf1f2b2dc18b47b33f55a489f99  ./vendor/ctrl/geminus-ach-toast
 614a91024c6c83ec4ea033c67a21af98  ./vendor/ctrl/geminus-browser
 662cf44aa55c807a18135b4f7995b0c2  ./vendor/ctrl/geminus-inpanel
-3a2ac6fef8ee2871ac124aceb69a3d51  ./vendor/ctrl/geminuslauncher
+6dc2d70a7b28142d6a9fed1a0686f294  ./vendor/ctrl/geminuslauncher
 2aa71f2ef4c097cc729d6df9eef26e2e  ./vendor/ctrl/geminus-power-watch.py
 c4ff039150e5653b44023dd53c42e7e2  ./vendor/ctrl/geminus-update.py
 bd04afedfe30cc86869de65a7a14b1bf  ./vendor/ctrl/geminus-yt-panel
@@ -78,14 +100,17 @@ e53548329beecaa7cc25dcff36ae2604  ./vendor/ctrl/icons_grid/ps.png
 af8b6247e450e04daa398a37b066c32d  ./vendor/ctrl/icons_grid/psp.png
 d906a7d2c6d1b2ad50270fb8358aec43  ./vendor/ctrl/icons_grid/snes.png
 401671960863c5dbc166ff7e8b668f3d  ./vendor/ctrl/icons_grid/ss.png
-6e20065ee42e39bca4b4e08dca748bdb  ./vendor/ctrl/libdrastic_shader.so
-7d557a971ea187e431488aede37480ea  ./vendor/ctrl/libmenuhook.so
+9122dc254ea78c413a0d0e5504072c95  ./vendor/ctrl/libdrastic_shader.so
+f507257ea4c8b0412cb750ea1f63a504  ./vendor/ctrl/libmenuhook.so
+845bffe9f1780e4bac50b9c8d07dd54d  ./vendor/ctrl/libnnddss_ach.so
 3809160e3d2bd189f934b36d6e46331e  ./vendor/ctrl/loadapp.sh
 0d3fe194d6fdedd94d9184c4afaa9c1b  ./vendor/ctrl/locale/en/LC_MESSAGES/geminuslauncher.mo
-8cc9ea8528865d6dd37d41cbbe95c6c7  ./vendor/ctrl/locale/es/LC_MESSAGES/geminuslauncher.mo
-edaa2c1159d2e3e791e2ff9b24cf2c9b  ./vendor/ctrl/menu-drastic
+e70cfd8ca0f4c751355ba88904df33da  ./vendor/ctrl/locale/es/LC_MESSAGES/geminuslauncher.mo
+3a019d1b0673317f689f02489719a9c3  ./vendor/ctrl/menu-drastic
 5ddb56a02ef83ea3a6deed798e3540b6  ./vendor/ctrl/mtp-watch.sh
+ce6d1a48d0dbae7e192b68df8b65eacf  ./vendor/ctrl/nds_ach_default.lua
 c1be49f5dc4056fd6d187cf78940c744  ./vendor/ctrl/ndsCtrl-libdsflip.sh
+0087a04a1ce207ad5aa60471cec866be  ./vendor/ctrl/ndsCtrl-nnddss.sh
 4d4739afc0bbfd0542b4b2430a5ce28c  ./vendor/ctrl/ra_achievements.py
 c34c704e662c09f6e71e78cd876ada66  ./vendor/ctrl/ra_local_export.py
 9bc5de55138e4abab93320fd606185e7  ./vendor/ctrl/ra_local_runtime.lua
@@ -104,7 +129,7 @@ d1cee2ddc801f521c3e457d692325beb  ./vendor/ctrl/ui/back_arrow.png
 741cf6a49acbe68612b0d0a6c0a7acb3  ./vendor/ctrl/ui/geminus_word.png
 ac8a84d981911db30ccd1f5d9265cf89  ./vendor/ctrl/ui/next_arrow_metal.png
 b903fa9c23f392e5cad38772ccd9e4aa  ./vendor/ctrl/ui/next_arrow.png
-128f28c3abc036f94a4a771f5ed0fd25  ./vendor/ctrl/version
+6f55513f351e9fdb04231860056f7c77  ./vendor/ctrl/version
 89310979101b576c0c78e58b6524f242  ./vendor/ctrl/waiting/bootlogo.bmp
 01bf561960a2ac20ed890b7b375f0b6c  ./vendor/ctrl/youtube.sh
 59dfc4a8d021ce054ddf30c9d018527e  ./vendor/ctrl/yt-bridge.py

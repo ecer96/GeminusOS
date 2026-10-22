@@ -3,7 +3,24 @@
 Launcher propio para la Anbernic RG DS Plus (RK3568, doble pantalla 1024x768).
 Sustituye al launcher oficial `dmenu.bin` (58% CPU en reposo -> 0% actual).
 
-Ultima actualizacion: v1.29 — traducciones inglesas completas.
+Ultima actualizacion: v1.30 — Fast Forward y 3D nativos en caliente; shaders Geminus; NNDDSS.
+
+---
+
+## v1.30
+
+- **Fast Forward y hires_3d nativos en caliente**: se escriben directamente
+  en el struct de DraStic (`nds_system`), sin reiniciar. La tarjeta FF y R2
+  bajan el 3D a 1x mientras el FF esta activo y restauran 2x al apagarlo.
+- **Shaders Geminus**: NDS Grid, CRT, Tubes, FSR, Cuadritos, DS Color y
+  NDS Old LCD. Lista corta con los shaders ligeros; los pesados quedan fuera.
+- **Shaders compartidos con NNDDSS**: `User/shaders` apunta al mismo
+  directorio de la microSD; los `.dfx/.dsd` se cargan en ambos emuladores.
+- **Menu de shaders**: escala 2x/1x y ON/OFF en caliente.
+- **NNDDSS**: opcion de emulador en Ajustes y wrapper con logros locales.
+- **Audio**: el menu ya no reaplica el volumen guardado al abrirse; las
+  tarjetas de volumen ajustan los dos sinks.
+- **Arranque**: se mantiene la mejora de v1.26.
 
 ---
 

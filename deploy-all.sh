@@ -51,6 +51,7 @@ build_all() {
     ( cd "$MENU" && GEMINUS_SDK="$SDK" ./build-menu.sh )
     ( cd "$MENU" && GEMINUS_SDK="$SDK" ./build-achd.sh )
     ( cd "$MENU" && GEMINUS_SDK="$SDK" ./build-toast.sh )
+    ( cd "$MENU" && GEMINUS_SDK="$SDK" ./build-nnddss-preload.sh )
 
     msg "Compilando drastic-shader"
     ( cd "$SHADER" && GEMINUS_SDK="$SDK" ./build.sh )
@@ -76,12 +77,17 @@ build_all() {
           "$LAUNCHER/ra_local_runtime.lua"       "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/menu-drastic"             "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/libmenuhook.so"           "$PAYLOAD/vendor/ctrl/"
+    cp -f "$MENU/build/ff-hires"                 "$PAYLOAD/vendor/ctrl/"
+    cp -f "$MENU/ndsCtrl-nnddss.sh"              "$PAYLOAD/vendor/ctrl/"
+    cp -f "$MENU/build/libnnddss_ach.so"         "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/geminus-achd"             "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/geminus-ach-toast"        "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/geminus-power-watch.py"         "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/ndsCtrl-libdsflip.sh"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/loadapp.sh"                     "$PAYLOAD/vendor/ctrl/"
     cp -f "$SHADER/build/libdrastic_shader.so"   "$PAYLOAD/vendor/ctrl/"
+    mkdir -p "$PAYLOAD/shaders"
+    cp -f "$SHADER/shaders/"* "$PAYLOAD/shaders/" 2>/dev/null || true
     ( cd "$LAUNCHER/assets/icons" && ./build_grid_sets.sh )
     rm -rf "$PAYLOAD/vendor/ctrl/icons_grid" "$PAYLOAD/vendor/ctrl/icons_grid_light"
     mkdir -p "$PAYLOAD/vendor/ctrl/icons_grid" "$PAYLOAD/vendor/ctrl/icons_grid_light"
@@ -95,7 +101,7 @@ build_all() {
           "$PAYLOAD/vendor/ctrl/ui/"
     mkdir -p "$PAYLOAD/vendor/ctrl/fonts"
     cp -f "$LAUNCHER/assets/fonts/"*.ttf "$PAYLOAD/vendor/ctrl/fonts/" 2>/dev/null || true
-    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh,loadapp.sh,geminus-achd,geminus-ach-toast,geminus-power-watch.py}
+    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ff-hires,ndsCtrl-libdsflip.sh,ndsCtrl-nnddss.sh,loadapp.sh,geminus-achd,geminus-ach-toast,geminus-power-watch.py,libnnddss_ach.so}
     chmod 755 "$PAYLOAD/vendor/ctrl/"scrape_*.py "$PAYLOAD/vendor/ctrl/"ra_*.py
     chmod 644 "$PAYLOAD/vendor/ctrl/ra_local_snapshot.lua"
     mkdir -p "$PAYLOAD/vendor/ctrl/apps"

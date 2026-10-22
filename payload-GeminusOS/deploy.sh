@@ -17,7 +17,8 @@ TS="$(date +%Y%m%d-%H%M%S)"
 echo "=== 1. vendor/ctrl ==="
 mkdir -p "$DEST/ctrl"
 for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtube.sh yt-bridge.py dmenu_ln menu-drastic \
-         libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh loadapp.sh mtp-watch.sh setSSH.sh \
+         libmenuhook.so libdrastic_shader.so ff-hires ndsCtrl-libdsflip.sh ndsCtrl-nnddss.sh loadapp.sh mtp-watch.sh setSSH.sh \
+         libnnddss_ach.so nds_ach_default.lua \
          geminus-update.py version scrape_libretro.py scrape_screenscraper.py \
          scrape_thegamesdb.py ra_login.py ra_sync.py ra_achievements.py \
          ra_local_export.py ra_local_scan.py ra_local_snapshot.lua ra_local_runtime.lua \
@@ -33,7 +34,22 @@ for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtub
     echo "  $f"
 done
 
-    echo "=== 1b. vendor/ctrl/icons_grid + ui ==="
+    echo "=== 1a. shaders compartidos (SD) ==="
+if [ -d "$HERE/shaders" ]; then
+    SD_SHADERS="${GEMINUS_SD_SHADERS:-/mnt/sdcard/roms/nds/shaders}"
+    if [ -d "$SD_SHADERS" ]; then
+        cp -f "$HERE/shaders/"* "$SD_SHADERS/" 2>/dev/null || true
+        echo "  $SD_SHADERS"
+    fi
+    NDIR="$DEST/deep/nnddss/User/shaders"
+    if [ -d "$DEST/deep/nnddss/User" ] && [ ! -L "$NDIR" ]; then
+        [ -e "$NDIR" ] && mv "$NDIR" "$NDIR.pre-share"
+        ln -s "$SD_SHADERS" "$NDIR"
+        echo "  NNDDSS User/shaders -> $SD_SHADERS"
+    fi
+fi
+
+echo "=== 1b. vendor/ctrl/icons_grid + ui ==="
     for d in icons_grid icons_grid_light ui apps fonts; do
         mkdir -p "$DEST/ctrl/$d"
         cp -rf "$HERE/vendor/ctrl/$d/." "$DEST/ctrl/$d"/ 2>/dev/null || true

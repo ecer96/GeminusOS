@@ -1,0 +1,35 @@
+// Geminus FSR
+// Version ligera: 5 muestras, edge-aware + sharpen suave.
+precision highp float;
+
+uniform sampler2D u_texture;
+uniform vec4 u_texture_size;   // (1/w, 1/h, w, h)
+uniform vec2 u_target_size;
+varying vec2 v_texcoord;
+
+vec3 tap(vec2 uv)
+{
+    return texture2D(u_texture, clamp(uv, 0.0, 1.0)).rgb;
+}
+
+void main()
+{
+    vec2 uv = v_texcoord;
+    vec2 t = u_texture_size.xy;
+
+    vec3 c = tap(uv);
+    vec3 l = tap(uv + vec2(-t.x, 0.0));
+    vec3 r = tap(uv + vec2( t.x, 0.0));
+    vec3 u = tap(uv + vec2(0.0, -t.y));
+    vec3 d = tap(uv + vec2(0.0,  t.y));
+
+    vec3 mn = min(min(l, r), min(u, d));
+    vec3 mx = max(max(l, r), max(u, d));
+    float edge = dot(mx - mn, vec3(0.299, 0.587, 0.114));
+
+    vec3 blur = (l + r + u + d) * 0.25;
+    vec3 sharp = c + (c - blur) * 0.48;
+    vec3 col = mix(0.5 * (c + blur), sharp, smoothstep(0.015, 0.12, edge));
+
+    gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+}
