@@ -180,36 +180,18 @@ def main():
 
     oldkey = cfg.get("key", "").strip()
     key = oldkey
-    login_ok = False
 
-    if password:
-        try:
-            token = api_login(user, password)
-            login_ok = True
-        except Exception as e:  # noqa: BLE001
-            log("ERROR al validar contraseña: %s" % e)
-        else:
-            if verify_key(user, token):
-                key = token
-                cfg["key"] = key
-                write_cfg(cfg)
-                log("clave API obtenida del login y guardada")
-            else:
-                log("AVISO: el token de login no vale como clave API")
-    else:
-        log("sin contraseña nueva: se usa la clave existente")
-
-    # No lanzar 16 peticiones con una clave inválida.
+    # API_Login está obsoleto (devuelve 401 siempre). La contraseña se
+    # escribe directamente en RetroArch, que hace su propio login.
+    # Para la lista del launcher solo se valida la Web API Key.
     if key and not verify_key(user, key):
         log("la clave API guardada no es válida")
         key = ""
 
-    if key:
-        status("running", "Sincronizando logros...")
-    elif password and not login_ok:
-        status("error", "No se pudo validar la contraseña; revisa tu cuenta")
-    else:
+    if not key:
         status("error", "Falta la clave API web (pégala en el 3er campo)")
+    else:
+        status("running", "Sincronizando logros...")
 
     if password:
         configure_retroarch(user, password)
