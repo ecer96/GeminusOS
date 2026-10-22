@@ -24,7 +24,12 @@ for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtub
          geminus-achd geminus-ach-toast geminus-power-watch.py; do
     src="$HERE/vendor/ctrl/$f"
     [ -f "$src" ] || { echo "  falta $src"; exit 1; }
-    cp -f "$src" "$DEST/ctrl/$f"; chmod 755 "$DEST/ctrl/$f"
+    # Reemplazo atomico: el launcher/menu pueden estar ejecutandose. Un cp
+    # directo sobre un binario en uso falla con ETXTBSY; renombrar no.
+    tmp="$DEST/ctrl/.$f.new"
+    cp -f "$src" "$tmp"
+    chmod 755 "$tmp"
+    mv -f "$tmp" "$DEST/ctrl/$f"
     echo "  $f"
 done
 
