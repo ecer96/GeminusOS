@@ -336,6 +336,26 @@ def scrape(rom_dir, rom_filter, types, force, st, root="/mnt/sdcard/roms", all_p
             boxart = (data.get("include", {}).get("boxart", {})
                           .get("data", {}).get(gid, []))
 
+            # include=boxart no siempre devuelve todos los tipos (capturas,
+            # fanart, logos...). El endpoint /Games/Images sí.
+            try:
+                imgs = api_get(apikey, "/Games/Images", games_id=gid)
+                idata = imgs.get("data", {}) or {}
+                itable = idata.get("images", {})
+                if isinstance(itable, dict):
+                    extra = itable.get(gid, []) or []
+                elif isinstance(itable, list):
+                    extra = itable
+                else:
+                    extra = []
+                ibase = (idata.get("base_url", {}) or {}).get("original", "")
+                if ibase:
+                    base_url = ibase
+                if extra:
+                    boxart = extra
+            except Exception as e:  # noqa: BLE001 - seguimos con include=boxart
+                sys.stderr.write("[tgdb] imagenes %s: %s\n" % (gid, e))
+
             got = 0
             for t in types:
                 if t not in TYPE_MAP:
