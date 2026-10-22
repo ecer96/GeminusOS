@@ -107,8 +107,12 @@ build_all() {
     cp -f "$ROOT/VERSION" "$PAYLOAD/vendor/ctrl/version"
     chmod 755 "$PAYLOAD/vendor/ctrl/geminus-update.py"
     chmod 644 "$PAYLOAD/vendor/ctrl/version"
-    mkdir -p "$PAYLOAD/vendor/ctrl/locale"
-    cp -rf "$LAUNCHER/locale/es" "$LAUNCHER/locale/en" "$PAYLOAD/vendor/ctrl/locale/"
+    mkdir -p "$PAYLOAD/vendor/ctrl/locale/en/LC_MESSAGES" \
+             "$PAYLOAD/vendor/ctrl/locale/es/LC_MESSAGES"
+    cp -f "$LAUNCHER/locale/en.mo" \
+          "$PAYLOAD/vendor/ctrl/locale/en/LC_MESSAGES/geminuslauncher.mo"
+    cp -f "$LAUNCHER/locale/es/LC_MESSAGES/geminuslauncher.mo" \
+          "$PAYLOAD/vendor/ctrl/locale/es/LC_MESSAGES/geminuslauncher.mo"
     chmod 755 "$PAYLOAD/vendor/ctrl/apps/"*.sh "$PAYLOAD/vendor/ctrl/apps/yt-dlp" 2>/dev/null || true
     ( cd "$PAYLOAD" && find . -type f ! -name MD5SUMS ! -name deploy.sh -exec md5sum {} \; | sort -k2 > MD5SUMS )
     echo "payload: $(wc -l < "$PAYLOAD/MD5SUMS") ficheros"

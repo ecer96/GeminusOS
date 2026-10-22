@@ -35,7 +35,7 @@ ROOTFS = os.environ.get("GEMINUS_ROOTFS", "/")
 STATE_FILE = os.path.join(STATE_DIR, "state")
 VERSION_FILE = os.path.join(CTRL, "version")
 DEFAULT_VERSION = "v1"
-CHECK_TTL = 6 * 3600  # no consultar GitHub mas de una vez cada 6 h
+CHECK_TTL = 3600  # no consultar GitHub mas de una vez cada hora
 LOCK_DIR = os.path.join(STATE_DIR, ".lock")
 
 
@@ -147,7 +147,8 @@ def cmd_check(force=False):
     st = _state_read()
     try:
         if not force and time.time() - os.path.getmtime(STATE_FILE) < CHECK_TTL \
-                and st.get("state") in ("idle", "available", "done"):
+                and st.get("state") in ("idle", "available", "done") \
+                and st.get("version") == installed_version():
             return 0
     except OSError:
         pass

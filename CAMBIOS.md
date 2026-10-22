@@ -3,7 +3,7 @@
 Launcher propio para la Anbernic RG DS Plus (RK3568, doble pantalla 1024x768).
 Sustituye al launcher oficial `dmenu.bin` (58% CPU en reposo -> 0% actual).
 
-Ultima actualizacion: v1.26 — arranque mas rapido (sin espera fija antes del launcher).
+Ultima actualizacion: v1.27 — avisos de actualizacion fiables y comprobacion periodica.
 
 ---
 
