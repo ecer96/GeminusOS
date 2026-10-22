@@ -11,6 +11,7 @@ No envia ningun desbloqueo a RetroAchievements.
 """
 import argparse
 import fcntl
+import json
 import os
 import subprocess
 import sys
@@ -56,12 +57,37 @@ def notify(label, title, subtitle, ms=6000):
 
 def has_data(rom):
     base = os.path.splitext(os.path.basename(rom))[0]
-    for ext in (".defs", ".meta", ".addrs", ".sig"):
+    for ext in (".defs", ".meta", ".addrs", ".sig", ".json"):
         if not os.path.isfile(os.path.join(ex.DATA_DIR, base + ext)):
             return False
     if not os.path.isfile(ex.KEY_FILE):
         return False
-    return os.path.isfile(os.path.join(ex.SCRIPTS_DIR, base + ".lua"))
+    if not os.path.isfile(os.path.join(ex.SCRIPTS_DIR, base + ".lua")):
+        return False
+
+    # Si otro ROM distinto comparte el mismo GameID, los datos son sospechosos
+    # (el exportador antiguo podia asignar N+ a cualquier titulo). Se vuelven a
+    # generar en vez de seguir mostrando logros repetidos.
+    try:
+        with open(os.path.join(ex.DATA_DIR, base + ".json"), encoding="utf-8") as f:
+            mine = json.load(f)
+        gid = int(mine.get("game_id") or 0)
+        title = mine.get("title", "")
+        for name in os.listdir(ex.DATA_DIR):
+            if not name.endswith(".json") or name[:-5] == base:
+                continue
+            try:
+                with open(os.path.join(ex.DATA_DIR, name), encoding="utf-8") as f:
+                    other = json.load(f)
+            except (OSError, ValueError):
+                continue
+            if int(other.get("game_id") or 0) != gid:
+                continue
+            if not ex.titles_match(title, other.get("title", "")):
+                return False
+    except (OSError, ValueError):
+        return False
+    return True
 
 
 def main():

@@ -148,7 +148,7 @@ if [ -x /mnt/vendor/ctrl/geminus-achd ] && [ -f "$ACH_DEFS" ] && [ -f "$ACH_ADDR
         --addrs "$ACH_ADDRS" --script "$ACH_LUA" \
         --snap /tmp/geminus_ach_snap.txt \
         --events /tmp/geminus_ach_events --tsv /mnt/data/geminus_local_ach.tsv \
-        --parent $$ >>"$LOG" 2>&1 &
+        --emu-rom "$1" --parent $$ >>"$LOG" 2>&1 &
     ACHD_PID=$!
     log "achd iniciado (pid=$ACHD_PID)"
 fi

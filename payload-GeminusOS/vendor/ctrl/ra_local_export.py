@@ -13,6 +13,7 @@ endpoint de emulador de RetroAchievements y genera:
 No envia ningun desbloqueo a RetroAchievements.
 """
 import argparse
+import difflib
 import hashlib
 import hmac
 import json
@@ -20,6 +21,7 @@ import os
 import re
 import sys
 import time
+import unicodedata
 import urllib.parse
 import urllib.request
 
@@ -86,6 +88,101 @@ def norm(s):
     return re.sub(r"[^a-z0-9]+", " ", s).strip()
 
 
+# Nombres que RetroAchievements usa de forma distinta al nombre del ROM.
+# Solo se aplican cuando la diferencia es de titulo, nunca para "adivinar"
+# juegos parecidos.
+TITLE_ALIASES = {
+    "dk jungle climber": "donkey kong jungle climber",
+    "professor layton and pandoras box": "professor layton and the diabolical box",
+    "professor layton and pandora s box": "professor layton and the diabolical box",
+    "professor laytons london life hack": "professor layton s london life",
+}
+
+# Etiquetas de sets auxiliares. Nunca se eligen si existe el juego base.
+AUX_RE = re.compile(
+    r"(?:^~[^~]+~\s*|\[(?:subset|hack|demo|prototype|homebrew)[^\]]*\])",
+    re.I)
+
+
+def norm_title(s):
+    """Normaliza un titulo para compararlo sin depender de region o puntuacion."""
+    s = unicodedata.normalize("NFKD", str(s or ""))
+    s = s.encode("ascii", "ignore").decode("ascii")
+    s = re.sub(r"\(.*?\)|\[.*?\]", " ", s)
+    s = re.sub(r"^(?:~[^~]+~\s*)+", "", s.strip())
+    s = s.replace("&", " and ")
+    s = re.sub(r",\s*(?:the|a|an)\s*$", "", s, flags=re.I)
+    s = re.sub(r"^(?:the|a|an)\s+", "", s.strip(), flags=re.I)
+    s = re.sub(r"[^a-z0-9]+", " ", s.lower()).strip()
+    return TITLE_ALIASES.get(s, s)
+
+
+STOP_WORDS = {"the", "a", "an", "of", "and", "version", "edition", "nintendo", "ds"}
+
+
+def title_tokens(s):
+    return {t for t in norm_title(s).split() if t not in STOP_WORDS}
+
+
+def _token_covered(tok, other):
+    if tok in other:
+        return True
+    if tok.isdigit():
+        return False
+    for o in other:
+        if o.isdigit():
+            continue
+        if min(len(tok), len(o)) >= 3 and (o.startswith(tok) or tok.startswith(o)):
+            return True
+        if difflib.SequenceMatcher(None, tok, o).ratio() >= 0.84:
+            return True
+    return False
+
+
+def titles_match(a, b):
+    """True solo si los dos titulos describen el mismo juego.
+
+    La cobertura simetrica de tokens evita los falsos positivos tipicos de
+    usar substring: por ejemplo, "N+" contiene la letra n que aparece en casi
+    cualquier titulo, pero sus tokens no cubren los del otro juego.
+    """
+    A, B = title_tokens(a), title_tokens(b)
+    if not A or not B:
+        return False
+    if A == B:
+        return True
+    # Los numeros (2, 3...) son parte importante del titulo. No permitimos
+    # confundir "Devil Survivor" con "Devil Survivor 2" o "Zoo Tycoon" con
+    # "Zoo Tycoon 2".
+    if {x for x in A if x.isdigit()} != {x for x in B if x.isdigit()}:
+        return False
+    if not all(_token_covered(x, B) for x in A):
+        return False
+    if not all(_token_covered(x, A) for x in B):
+        return False
+    return difflib.SequenceMatcher(None, norm_title(a), norm_title(b)).ratio() >= 0.86
+
+
+def _is_aux_title(title):
+    return bool(re.search(r"~[^~]+~|\[(?:subset|hack|demo|prototype|homebrew)",
+                          str(title or ""), re.I))
+
+
+def _game_candidates(games, rom_title):
+    """Devuelve (juego, titulo, es_aux) ordenados por calidad de coincidencia."""
+    out = []
+    for g in games:
+        # Algunos juegos agrupan dos versiones en un solo titulo: "A | B".
+        for part in re.split(r"\s*\|\s*", str(g.get("Title", ""))):
+            if not titles_match(rom_title, part):
+                continue
+            score = difflib.SequenceMatcher(
+                None, norm_title(rom_title), norm_title(part)).ratio()
+            out.append((score, _is_aux_title(part), int(g["ID"]), part))
+    out.sort(key=lambda x: (x[1], -x[0], x[2]))
+    return out
+
+
 def md5_file(path):
     h = hashlib.md5()
     with open(path, "rb") as f:
@@ -111,22 +208,27 @@ def find_game_id(rom, user, key):
     gid = gid_from_tsv(rom)
     if gid:
         return gid
-    h = md5_file(rom)
+
     games = api("API_GetGameList.php", user, key, i=CONSOLES["nds"], f=1, h=1)
-    for g in games:
-        if h.lower() in [str(x).lower() for x in (g.get("Hashes") or [])]:
-            return int(g["ID"])
-    wanted = norm(os.path.splitext(os.path.basename(rom))[0])
-    best = None
-    for g in games:
-        n = norm(g.get("Title", ""))
-        if n == wanted:
-            return int(g["ID"])
-        if not best and (wanted in n or n in wanted):
-            best = g
-    if best:
-        return int(best["ID"])
-    raise RuntimeError("juego no encontrado en RA")
+    rom_title = os.path.splitext(os.path.basename(rom))[0]
+    candidates = _game_candidates(games, rom_title)
+
+    # Los sets "[Subset ...]" son ampliaciones de un juego base. No se usan
+    # como sustituto del set principal: eso hacia que varios juegos distintos
+    # compartieran logros. Si no hay set base, se trata como "sin logros".
+    base = [c for c in candidates if not c[1]]
+    if not base:
+        raise RuntimeError("juego no encontrado en RA")
+
+    # Si hay varias coincidencias, solo aceptamos una claramente mejor. Un
+    # empate entre IDs distintos es ambiguo y es preferible no inventar datos.
+    top_score = base[0][0]
+    top = [c for c in base if abs(c[0] - top_score) < 0.015]
+    ids = {c[2] for c in top}
+    if len(ids) > 1:
+        raise RuntimeError("varias coincidencias ambiguas en RA: %s" %
+                           ", ".join("%s (%s)" % (c[3], c[2]) for c in top))
+    return base[0][2]
 
 
 def extract_addrs(memaddr):
@@ -222,6 +324,51 @@ def sign_files(base, script):
     return sig
 
 
+def purge_local(base, scripts_dir):
+    """Elimina solo los datos generados de un juego (no toca ROMs ni saves)."""
+    for ext in (".defs", ".meta", ".titles", ".addrs", ".json", ".sig"):
+        try:
+            os.remove(os.path.join(DATA_DIR, base + ext))
+        except OSError:
+            pass
+    if scripts_dir:
+        try:
+            os.remove(os.path.join(scripts_dir, base + ".lua"))
+        except OSError:
+            pass
+    for nd in ("/mnt/vendor/deep/nnddss/User/scripts",
+               "/mnt/vendor/deep/nnddss/scripts"):
+        try:
+            os.remove(os.path.join(nd, base + ".lua"))
+        except OSError:
+            pass
+
+
+def other_game_with_id(base, gid, title):
+    """Busca otro ROM que ya use este GameID con un titulo distinto."""
+    try:
+        names = os.listdir(DATA_DIR)
+    except OSError:
+        return None
+    for name in names:
+        if not name.endswith(".json"):
+            continue
+        other = name[:-5]
+        if other == base:
+            continue
+        try:
+            with open(os.path.join(DATA_DIR, name), encoding="utf-8") as f:
+                d = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if int(d.get("game_id") or 0) != int(gid):
+            continue
+        if titles_match(d.get("title", ""), title):
+            continue
+        return other, d.get("title", "")
+    return None
+
+
 def secure_data():
     os.makedirs(DATA_DIR, exist_ok=True)
     try:
@@ -290,6 +437,7 @@ def main():
         gid = args.game_id or find_game_id(args.rom, user, key)
     except Exception as e:
         if args.auto and "no encontrado" in str(e):
+            purge_local(base, args.scripts_dir)
             open(none_marker, "w").close()
             os.chmod(none_marker, 0o600)
             print("Sin logros en RetroAchievements para este juego")
@@ -300,13 +448,23 @@ def main():
     token = args.token or ra_login(user, password)
     patch = ra_patch(user, token, gid)
     title = patch.get("Title", "") or os.path.basename(args.rom)
+    other = other_game_with_id(base, gid, title)
+    if other:
+        print("ERROR: el GameID %d (%s) ya pertenece a otro juego: %s" %
+              (gid, title, other[0]))
+        return 1
     achs = patch.get("Achievements") or []
     if isinstance(achs, dict):
         achs = list(achs.values())
-    achs = [a for a in achs if a.get("MemAddr") and not a.get("Title", "").startswith("Warning:")]
+    # Los [VOID] son marcadores internos de RA, no logros que deban
+    # entregarse al jugador. Tampoco se incluyen los avisos tecnicos.
+    achs = [a for a in achs if a.get("MemAddr") and
+            not a.get("Title", "").startswith("Warning:") and
+            not a.get("Title", "").startswith("[VOID]")]
     if not achs:
         print("ERROR: no hay logros con condiciones")
         if args.auto:
+            purge_local(base, args.scripts_dir)
             open(none_marker, "w").close()
             os.chmod(none_marker, 0o600)
             return 2
@@ -335,7 +493,9 @@ def main():
         for ra in sorted(addrs):
             f.write("%d\t%s\n" % (ra, addrs[ra]))
     with open(os.path.join(DATA_DIR, base + ".json"), "w", encoding="utf-8") as f:
-        json.dump({"game_id": gid, "title": title, "achievements": achs},
+        json.dump({"game_id": gid, "title": title,
+                   "rom": os.path.basename(args.rom),
+                   "achievements": achs},
                   f, ensure_ascii=False, indent=1)
 
     if not args.no_badges:

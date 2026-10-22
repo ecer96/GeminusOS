@@ -142,14 +142,12 @@ prepare_nd_scripts() {
     mkdir -p "$ND_SCRIPTS" "$ND_SCRIPTS_ALT" 2>/dev/null
     if [ -f "$ACH_LUA_DR" ]; then
         for dst in "$ND_SCRIPTS/$BASE.lua" "$ND_SCRIPTS_ALT/$BASE.lua"; do
-            if [ ! -f "$dst" ] || cmp -s "$ACH_LUA_DR" "$dst" || \
-               head -3 "$dst" 2>/dev/null | grep -q 'ra_local_export'; then
-                cp -f "$ACH_LUA_DR" "$dst" 2>/dev/null
-                chmod 600 "$dst" 2>/dev/null
-            else
-                log "script NNDDSS existente distinto, se respeta: $dst"
-            fi
+            # El script de DraStic es la fuente de verdad y se regenera al
+            # escanear; NNDDSS debe usar exactamente el mismo.
+            cp -f "$ACH_LUA_DR" "$dst" 2>/dev/null
+            chmod 600 "$dst" 2>/dev/null
         done
+        log "scripts NNDDSS actualizados desde $ACH_LUA_DR"
     fi
     # Respaldo generico: solo se instala si no hay un default.lua ajeno.
     if [ -f "$ACH_DEFAULT" ]; then
@@ -179,7 +177,7 @@ if [ -x "$CTRL/geminus-achd" ] && [ -f "$ACH_DEFS" ] && [ -f "$ACH_ADDRS" ] && \
         --addrs "$ACH_ADDRS" --script "$ACH_LUA" \
         --snap /tmp/geminus_ach_snap.txt \
         --events /tmp/geminus_ach_events --tsv /mnt/data/geminus_local_ach.tsv \
-        --parent $$ >>"$LOG" 2>&1 &
+        --emu-rom "$ROM" --parent $$ >>"$LOG" 2>&1 &
     ACHD_PID=$!
     log "achd iniciado (pid=$ACHD_PID, lua=$ACH_LUA)"
 else
@@ -192,6 +190,34 @@ if [ -f "$ACH_PRELOAD" ]; then
     export LD_PRELOAD="$ACH_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}"
     log "LD_PRELOAD=$LD_PRELOAD"
 fi
+
+# El core de NNDDSS trae el flag Lua a cero y no carga scripts/<rom>.lua.
+# Parcheamos la comprobacion cbz de FUN_00175c00 (offset 0x75d98) a NOP.
+# Se hace una copia .pre-ach y solo si los bytes son los esperados.
+patch_nnddss_core() {
+    local lib="$NDIR/lib/libnnddss.so"
+    [ -f "$lib" ] || return 0
+    if [ ! -f "$lib.pre-ach" ]; then
+        cp -f "$lib" "$lib.pre-ach"
+        log "backup core NNDDSS: $lib.pre-ach"
+    fi
+    python3 - "$lib" <<'PYEOF'
+import sys
+p=sys.argv[1]
+d=bytearray(open(p,'rb').read())
+off=0x75d98
+if len(d) < off+4:
+    print("patch: core corto"); sys.exit(0)
+if d[off:off+4] == bytes.fromhex("1f2003d5"):
+    print("patch: ya aplicado"); sys.exit(0)
+if d[off:off+4] != bytes.fromhex("68040034"):
+    print("patch: bytes inesperados "+d[off:off+4].hex()); sys.exit(0)
+d[off:off+4]=bytes.fromhex("1f2003d5")
+open(p,'wb').write(d)
+print("patch: NOP aplicado")
+PYEOF
+}
+patch_nnddss_core >>"$LOG" 2>&1
 
 log "Lanzando NNDDSS..."
 # launch.sh hace el enlace de saves y termina con exec; lo ejecutamos como
