@@ -127,25 +127,151 @@ EasyRPG · ONS
 
 Ports · Apps
 
-## ROMs y contenido
+## ROMs, apps y ports
 
-Coloca tus juegos en la microSD:
+GeminusOS **no** incluye juegos, ROMs ni BIOS.
 
-```
+### Carpetas de ROMs
+
+Cada sistema va en su propia carpeta dentro de la microSD:
+
+```text
 /mnt/sdcard/roms/<sistema>/
 ```
 
-Por ejemplo:
+Ejemplos habituales:
 
-```
-/mnt/sdcard/roms/nds/
-/mnt/sdcard/roms/snes/
-/mnt/sdcard/roms/psx/
-/mnt/sdcard/roms/APPS/
+| Sistema | Carpeta |
+|---|---|
+| Nintendo DS | `roms/nds/` |
+| PSP | `roms/psp/` |
+| Dreamcast | `roms/dreamcast/` |
+| Saturn | `roms/saturn/` |
+| Game Boy / Color / Advance | `roms/gb/`, `roms/gbc/`, `roms/gba/` |
+| NES / SNES | `roms/nes/`, `roms/snes/` |
+| Genesis / Master System / Game Gear | `roms/genesis/`, `roms/mastersystem/`, `roms/gamegear/` |
+| Nintendo 64 | `roms/n64/` |
+| PlayStation | `roms/psx/` |
+| Arcade | `roms/mame/`, `roms/fbneo/`, `roms/cps1/`, `roms/cps2/`, `roms/cps3/`, `roms/neogeo/` |
+
+Para juegos de varios discos, usa una subcarpeta con una lista `.m3u` cuando el emulador lo admita.
+
+### Apps y ports
+
+| Tipo | Carpeta | Contenido |
+|---|---|---|
+| **Apps** | `/mnt/sdcard/roms/APPS/` | Scripts `.sh`; uno por aplicación |
+| **Ports** | `/mnt/sdcard/roms/ports/` | Lanzadores de ports; un `.sh` por port |
+
+`APPS` va en mayúsculas. La carpeta ya incluye las apps internas: navegador, YouTube y reproductor multimedia. Añade tus propios `.sh` y aparecerán en la sección **Apps**.
+
+### Copiar archivos desde el PC
+
+- Usa **MTP** desde la consola (Ajustes → MTP), o
+- Saca la microSD y usa un lector de tarjetas.
+
+En Windows, la partición de datos puede aparecer como una unidad aparte. No modifiques las particiones del sistema.
+
+Las carátulas y metadatos se descargan desde el **Scraper** (ver abajo). Las BIOS no están incluidas: colócalas donde las espere cada emulador.
+
+## Logros
+
+### RetroAchievements (RetroArch)
+
+Abre **Ajustes → RetroAchievements**, introduce usuario y contraseña y usa **Sincronizar logros** para actualizar el progreso. Los datos aparecen en el launcher cuando están disponibles. Hace falta conexión a internet.
+
+### Logros locales de Nintendo DS
+
+Los juegos de NDS pueden usar logros evaluados **en la propia consola** mediante DraStic:
+
+- La primera vez que abres un juego de NDS, GeminusOS prepara sus logros automáticamente si hay WiFi y cuenta de RetroAchievements configurada.
+- Puedes volver a escanear desde la lista de juegos NDS: **Start → Opciones → Escanear logros de este juego / esta colección / todos**.
+- Dentro del juego, pulsa **Menu** y abre la pestaña **Logros**.
+- En el launcher, selecciona un juego de NDS y pulsa **X** para ver su lista local.
+- Al desbloquear uno aparece un aviso en pantalla con su badge.
+
+Estos logros se guardan y evalúan en local. No se envía ni se concede nada a RetroAchievements. Algunas definiciones complejas de RA pueden no ser compatibles.
+
+## Scrapers
+
+Abre **Ajustes → Scraper** para elegir proveedor y empezar:
+
+| Proveedor | Requisitos |
+|---|---|
+| **Libretro** | Sin cuenta ni API key |
+| **TheGamesDB** | API key gratuita |
+| **ScreenScraper** | Usuario y contraseña de ScreenScraper |
+
+Puedes scrapear la plataforma actual o todas desde esa misma pantalla.
+
+Desde la biblioteca también puedes pulsar **Start → Opciones** y elegir:
+
+- **Scrapear este juego**
+- **Scrapear esta colección**
+
+Desde la parrilla de plataformas, pulsa **Start** para scrapear la colección actual o todas.
+
+El scraping necesita WiFi. Las carátulas y metadatos se guardan por juego; vuelve a ejecutarlo para refrescar o completar datos.
+
+## Temas, color de acento e idioma
+
+- **Ajustes → Tema** cambia entre los temas claro/oscuro integrados y los temas personalizados.
+- Los temas personalizados son archivos `.theme` en:
+
+```text
+/mnt/sdcard/GeminusOS/themes/
 ```
 
-Las carátulas y metadatos se pueden descargar desde el menú **Scraper**.
-Las BIOS deben colocarse donde las espere cada emulador.
+- **Ajustes → Color de acento** cambia el color de resaltado.
+- **Ajustes → Idioma** cambia entre español e inglés. El launcher se recarga automáticamente.
+
+### Iconos personalizados del launcher
+
+Puedes sustituir los iconos de plataforma del grid/inicio:
+
+| Tema | Carpeta |
+|---|---|
+| Tema oscuro | `/mnt/sdcard/GeminusOS/icons/` |
+| Tema claro | `/mnt/sdcard/GeminusOS/icons_light/` |
+
+- Usa el nombre que espera la plataforma: `nds.png`, `snes.png`, `ps.png`, `gba.png`, `apps.png`, `ports.png`, etc.
+- PNG cuadrado con fondo transparente; se recomienda 256×256.
+- Iconos **blancos** para el tema oscuro y **negros** para el claro.
+- Los iconos del usuario tienen prioridad sobre los integrados. Reinicia el launcher o cambia de tema para recargarlos.
+
+## Actualizar
+
+Abre **Ajustes → Actualizar**.
+
+- GeminusOS comprueba si hay una versión nueva al arrancar y periódicamente en segundo plano.
+- Si hay una versión nueva, el menú la muestra y puedes instalarla con un botón.
+- El actualizador descarga el payload, verifica su SHA-256, lo instala y reinicia el launcher.
+- **No** hace falta volver a flashear la microSD para las actualizaciones normales.
+
+La imagen base descargable es la v1.1. Tras el primer arranque, actualiza a la última versión (actualmente **v1.29**). Si la comprobación falla, el menú muestra **“Sin conexión / no se pudo comprobar”** en lugar de decir que todo está al día.
+
+## Menús dentro del juego
+
+### RetroArch — panel de la pantalla inferior
+
+Al iniciar un juego de RetroArch, el panel aparece en la pantalla inferior. Toca las pestañas:
+
+- **Control**: fast forward, guardar/cargar estado, captura, pausa, reset, menú de RetroArch y cerrar juego.
+- **Pantalla**: brillo, volumen y opciones de pantalla.
+- **Sistema**: información del sistema y opciones de energía.
+
+La pantalla superior sigue mostrando el juego.
+
+### DraStic — menú de Nintendo DS
+
+Pulsa el botón **Menu** durante un juego de NDS. El menú aparece en la pantalla inferior:
+
+- **Principal**: fast forward, guardar/cargar estado, micrófono, volumen, cerrar menú y salir del emulador.
+- **Opciones**: shaders, sensibilidad del micrófono, resolución 3D, reiniciar, WiFi y escaneo de logros.
+- **Apariencia**: tema, color de acento e idioma.
+- **Logros**: lista de logros locales del juego actual.
+
+Usa **A** para confirmar, **B** para volver y **Menu** para cerrar. La pantalla superior muestra la barra de estado.
 
 ## Controles
 

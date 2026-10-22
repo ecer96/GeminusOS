@@ -187,28 +187,161 @@ The base image is v1.1. Updating is important: new launcher features, fixes and 
 
 ---
 
-## 5. Add your games
+## 5. ROMs, apps and ports
 
 GeminusOS does **not** include games, ROMs or BIOS files.
 
-After the first boot, copy your files to:
+### ROM folders
+
+Copy each system to its own folder inside the microSD card:
 
 ```text
 /mnt/sdcard/roms/<system>/
 ```
 
-Examples:
+Common examples:
+
+| System | Folder |
+|---|---|
+| Nintendo DS | `roms/nds/` |
+| PSP | `roms/psp/` |
+| Dreamcast | `roms/dreamcast/` |
+| Saturn | `roms/saturn/` |
+| Game Boy / Color / Advance | `roms/gb/`, `roms/gbc/`, `roms/gba/` |
+| NES / SNES | `roms/nes/`, `roms/snes/` |
+| Genesis / Master System / Game Gear | `roms/genesis/`, `roms/mastersystem/`, `roms/gamegear/` |
+| Nintendo 64 | `roms/n64/` |
+| PlayStation | `roms/psx/` |
+| Arcade | `roms/mame/`, `roms/fbneo/`, `roms/cps1/`, `roms/cps2/`, `roms/cps3/`, `roms/neogeo/` |
+
+Keep multi-disc games in a subfolder with a `.m3u` playlist when the emulator supports it.
+
+### Apps and ports
+
+| Type | Folder | Content |
+|---|---|---|
+| **Apps** | `/mnt/sdcard/roms/APPS/` | Executable `.sh` files; one script per app |
+| **Ports** | `/mnt/sdcard/roms/ports/` | Port launchers; one `.sh` per port |
+
+`APPS` is uppercase. The folder already contains the built-in apps such as the browser, YouTube and the media player. Add your own `.sh` launchers there and they will appear in the **Apps** section.
+
+### Copying files from a computer
+
+- Use **MTP** from the console (Settings → MTP), or
+- Remove the microSD card and use a card reader.
+
+On Windows, the large data partition may appear as a separate drive. Do not modify the system partitions.
+
+Covers and metadata are downloaded from the **Scraper** (see below). BIOS files are not included; place them in the folder expected by each emulator.
+
+---
+
+## Achievements
+
+### RetroAchievements (RetroArch)
+
+Open **Settings → RetroAchievements**, enter your RetroAchievements username and password, and use **Sincronizar logros** to refresh your progress. Game progress and achievement data appear in the launcher when available. A network connection is required.
+
+### Local Nintendo DS achievements
+
+Nintendo DS games can use achievements evaluated **on the console** through DraStic:
+
+- The first time you launch an NDS game, GeminusOS prepares its achievement data automatically if WiFi and a RetroAchievements account are configured.
+- You can rescan manually from the NDS game list: **Start → Options → Scan achievements for this game / this collection / all**.
+- Inside the game, press the **Menu** button and open the **Achievements** tab.
+- In the launcher, select an NDS game and press **X** to open its local achievement list.
+- Unlocks appear as an on-screen notification with the achievement badge.
+
+These achievements are stored and evaluated locally. Nothing is uploaded or awarded to RetroAchievements. Some complex RetroAchievements definitions may not be supported.
+
+---
+
+## Scrapers
+
+Open **Settings → Scraper** to choose a provider and start scraping:
+
+| Provider | Requirements |
+|---|---|
+| **Libretro** | No account or API key |
+| **TheGamesDB** | Free API key |
+| **ScreenScraper** | ScreenScraper username and password |
+
+You can scrape the current platform or all platforms from the same screen.
+
+From the game library you can also press **Start → Options** and choose:
+
+- **Scrape this game**
+- **Scrape this collection**
+
+From the platform grid, press **Start** to scrape the current collection or all platforms.
+
+Scraping requires WiFi. Covers and metadata are saved per game; run it again to refresh or complete missing data.
+
+---
+
+## Themes, accent colors and language
+
+- **Settings → Theme** switches between the built-in dark/light themes and any custom themes.
+- Custom themes are `.theme` files placed in:
 
 ```text
-/mnt/sdcard/roms/nds/
-/mnt/sdcard/roms/snes/
-/mnt/sdcard/roms/psx/
-/mnt/sdcard/roms/APPS/
+/mnt/sdcard/GeminusOS/themes/
 ```
 
-You can use the console's MTP mode over USB or put the microSD card in a card reader. On Windows, the large data partition may appear as a separate drive; do not modify the system partitions.
+- **Settings → Accent color** changes the highlight color.
+- **Settings → Language** switches between Spanish and English. The launcher reloads automatically.
 
-Covers and metadata can be downloaded from the **Scraper** menu. Place BIOS files where each emulator expects them.
+### Custom launcher icons
+
+You can replace the platform icons used by the grid/home screens:
+
+| Theme | Folder |
+|---|---|
+| Dark theme | `/mnt/sdcard/GeminusOS/icons/` |
+| Light theme | `/mnt/sdcard/GeminusOS/icons_light/` |
+
+- Use the filename expected by the platform, for example `nds.png`, `snes.png`, `ps.png`, `gba.png`, `apps.png` or `ports.png`.
+- Use a square PNG with a transparent background; 256×256 is recommended.
+- Use **white** icons for the dark theme and **black** icons for the light theme.
+- User icons take priority over the built-in ones. Restart the launcher or switch themes to reload them.
+
+---
+
+## Updating
+
+Open **Settings → Update**.
+
+- GeminusOS checks for a new release on startup and periodically in the background.
+- If a new version is available, the menu shows it and you can install it with one button.
+- The updater downloads the payload, verifies its SHA-256, installs it and restarts the launcher.
+- You do **not** need to reflash the microSD card for normal updates.
+
+The downloadable base image is v1.1. After the first boot, update to the latest version (currently v1.29). If the check fails, the menu shows **“Offline / could not check”** instead of pretending everything is up to date.
+
+---
+
+## In-game menus
+
+### RetroArch — lower-screen panel
+
+When a RetroArch game starts, the in-game panel appears on the lower screen. Tap the tabs:
+
+- **Control**: fast forward, save/load state, screenshot, pause, reset, RetroArch menu and close game.
+- **Screen**: brightness, volume and screen options.
+- **System**: system information and power options.
+
+The top screen keeps showing the game.
+
+### DraStic — Nintendo DS menu
+
+Press the **Menu** button during a Nintendo DS game. The menu opens on the lower screen:
+
+- **Main**: fast forward, save/load state, microphone, volume, close menu and exit emulator.
+- **Options**: shaders, microphone sensitivity, 3D resolution, restart, WiFi and achievement scanning.
+- **Appearance**: theme, accent color and language.
+- **Achievements**: local achievement list for the current game.
+
+Use **A** to confirm, **B** to go back, and **Menu** to close. The top screen shows the status bar.
 
 ---
 
@@ -284,7 +417,7 @@ Ports · Apps
 | D-pad / stick | Navigate |
 | **A** | Open / confirm |
 | **B** | Back / cancel |
-| **X** | Continue last game (Home) |
+| **X** | Achievements (game library) / continue last game (Home) |
 | **Y** | Options: favorite, surprise, collection, sort, scrape |
 | **L1 / R1** | Alphabetical jump in the game list |
 | **Select** | Play the game of the day |
