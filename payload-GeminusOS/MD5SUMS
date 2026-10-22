@@ -32,7 +32,7 @@ eee8df6044fd059718146d1afe5da4d5  ./vendor/ctrl/geminus-achd
 fd996cf1f2b2dc18b47b33f55a489f99  ./vendor/ctrl/geminus-ach-toast
 614a91024c6c83ec4ea033c67a21af98  ./vendor/ctrl/geminus-browser
 662cf44aa55c807a18135b4f7995b0c2  ./vendor/ctrl/geminus-inpanel
-0e99d24e3d55b80b776b039c9b4d3daa  ./vendor/ctrl/geminuslauncher
+3a2ac6fef8ee2871ac124aceb69a3d51  ./vendor/ctrl/geminuslauncher
 2aa71f2ef4c097cc729d6df9eef26e2e  ./vendor/ctrl/geminus-power-watch.py
 c4ff039150e5653b44023dd53c42e7e2  ./vendor/ctrl/geminus-update.py
 bd04afedfe30cc86869de65a7a14b1bf  ./vendor/ctrl/geminus-yt-panel
@@ -81,7 +81,7 @@ d906a7d2c6d1b2ad50270fb8358aec43  ./vendor/ctrl/icons_grid/snes.png
 6e20065ee42e39bca4b4e08dca748bdb  ./vendor/ctrl/libdrastic_shader.so
 7d557a971ea187e431488aede37480ea  ./vendor/ctrl/libmenuhook.so
 3809160e3d2bd189f934b36d6e46331e  ./vendor/ctrl/loadapp.sh
-2ce19d0dddd941d747d32a91889da727  ./vendor/ctrl/locale/en/LC_MESSAGES/geminuslauncher.mo
+0d3fe194d6fdedd94d9184c4afaa9c1b  ./vendor/ctrl/locale/en/LC_MESSAGES/geminuslauncher.mo
 8cc9ea8528865d6dd37d41cbbe95c6c7  ./vendor/ctrl/locale/es/LC_MESSAGES/geminuslauncher.mo
 edaa2c1159d2e3e791e2ff9b24cf2c9b  ./vendor/ctrl/menu-drastic
 5ddb56a02ef83ea3a6deed798e3540b6  ./vendor/ctrl/mtp-watch.sh
@@ -104,7 +104,7 @@ d1cee2ddc801f521c3e457d692325beb  ./vendor/ctrl/ui/back_arrow.png
 741cf6a49acbe68612b0d0a6c0a7acb3  ./vendor/ctrl/ui/geminus_word.png
 ac8a84d981911db30ccd1f5d9265cf89  ./vendor/ctrl/ui/next_arrow_metal.png
 b903fa9c23f392e5cad38772ccd9e4aa  ./vendor/ctrl/ui/next_arrow.png
-d73c4e3b3d9d14c1bb81a79f48cdf345  ./vendor/ctrl/version
+128f28c3abc036f94a4a771f5ed0fd25  ./vendor/ctrl/version
 89310979101b576c0c78e58b6524f242  ./vendor/ctrl/waiting/bootlogo.bmp
 01bf561960a2ac20ed890b7b375f0b6c  ./vendor/ctrl/youtube.sh
 59dfc4a8d021ce054ddf30c9d018527e  ./vendor/ctrl/yt-bridge.py
