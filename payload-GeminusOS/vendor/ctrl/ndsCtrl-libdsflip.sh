@@ -44,6 +44,13 @@ sleep 0.3
 cd "$DDIR" || exit 1
 
 # === Configuracion ===
+# 3D multihilo desactivado: en esta consola a veces descoloca las pantallas.
+DCFG="$DDIR/config/drastic.cfg"
+if [ -f "$DCFG" ]; then
+    sed -i 's/^[[:space:]]*threaded_3d[[:space:]]*=.*/threaded_3d = 0/' "$DCFG" 2>/dev/null
+    grep -q '^threaded_3d' "$DCFG" || echo 'threaded_3d = 0' >> "$DCFG"
+    log "threaded_3d = 0"
+fi
 echo "calibration:gt9xx-0:0.5 0 0.5 0 1 0" > /tmp/.weston_drm.conf
 echo 0 > /sys/class/anbernic_misc/tpctrl
 
