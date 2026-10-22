@@ -88,6 +88,22 @@ def api_login(user, password):
     return token
 
 
+def verify_key(user, key):
+    """Comprueba que la clave sirve para la Web API (y=)."""
+    if not user or not key:
+        return False
+    url = "https://retroachievements.org/API/API_GetUserProfile.php?" + urllib.parse.urlencode(
+        {"z": user, "y": key})
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers=UA),
+                                    timeout=30) as r:
+            data = json.load(r)
+        return bool(data.get("User") or data.get("Username") or data.get("ID"))
+    except Exception as e:  # noqa: BLE001
+        log("clave API no válida: %s" % e)
+        return False
+
+
 def ra_quote(v):
     return '"' + str(v).replace("\\", "\\\\").replace('"', '\\"') + '"'
 
@@ -162,21 +178,33 @@ def main():
         log("ERROR: falta el usuario")
         return 2
 
+    oldkey = cfg.get("key", "").strip()
+    key = oldkey
+
     if password:
         try:
-            key = api_login(user, password)
+            token = api_login(user, password)
         except Exception as e:  # noqa: BLE001
             status("error", "Credenciales rechazadas o sin conexión")
             log("ERROR al validar credenciales: %s" % e)
             log("Se conserva la clave API anterior si existía.")
-            key = cfg.get("key", "").strip()
         else:
-            cfg["key"] = key
-            write_cfg(cfg)
-            status("running", "Credenciales válidas. Sincronizando logros...")
-            log("clave API obtenida y guardada")
+            if verify_key(user, token):
+                key = token
+                cfg["key"] = key
+                write_cfg(cfg)
+                status("running", "Credenciales válidas. Sincronizando logros...")
+                log("clave API obtenida y guardada")
+            else:
+                # API_Login devuelve un token de sesión que no siempre vale
+                # como clave de la Web API: conservamos la clave anterior.
+                log("AVISO: el token de login no vale como clave API")
+                if oldkey and verify_key(user, oldkey):
+                    key = oldkey
+                    status("running", "Credenciales válidas. Sincronizando logros...")
+                else:
+                    status("error", "Falta la clave API web (pégala en el 3er campo)")
     else:
-        key = cfg.get("key", "").strip()
         log("sin contraseña nueva: se usa la clave existente")
 
     if password:
@@ -190,7 +218,9 @@ def main():
 
     if key:
         rc = subprocess.run(["python3", "/mnt/vendor/ctrl/ra_sync.py"],
-                            check=False)
+                            check=False, capture_output=True, text=True)
+        if rc.stderr:
+            print(rc.stderr, end="")
         if rc.returncode == 0:
             n = 0
             try:
@@ -201,7 +231,17 @@ def main():
             status("ok", "Logros sincronizados: %d juegos" % n)
             log("sincronización OK: %d juegos" % n)
         else:
-            status("error", "No se pudieron sincronizar los logros")
+            detail = ""
+            for line in (rc.stderr or "").splitlines():
+                if "error" in line.lower() or "401" in line or "403" in line:
+                    detail = line.strip()
+                    break
+            if not detail:
+                detail = (rc.stderr or "").strip().splitlines()[-1] if (rc.stderr or "").strip() else ""
+            msg = "No se pudieron sincronizar los logros"
+            if detail:
+                msg += ": " + detail[:90]
+            status("error", msg)
             log("ERROR: ra_sync.py devolvió %d" % rc.returncode)
     else:
         status("error", "No hay clave API para sincronizar")
