@@ -126,6 +126,9 @@ def configure_retroarch(user, password):
         set_kv(f, "cheevos_enable", ra_quote("true"))
         set_kv(f, "cheevos_username", ra_quote(user))
         set_kv(f, "cheevos_password", ra_quote(password))
+        # Un token viejo/inválido impide el login aunque la contraseña sea
+        # correcta: RetroArch lo usa en lugar de cheevos_password.
+        set_kv(f, "cheevos_token", ra_quote(""))
         log("configurado %s" % f)
 
 
@@ -155,6 +158,12 @@ def main():
 
     if password:
         configure_retroarch(user, password)
+
+    try:
+        with open("/mnt/data/geminus_ra_login.stamp", "w") as st:
+            st.write(str(int(__import__("time").time())) + "\n")
+    except OSError:
+        pass
 
     if key:
         subprocess.run(["python3", "/mnt/vendor/ctrl/ra_sync.py"],
