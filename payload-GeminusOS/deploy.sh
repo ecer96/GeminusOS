@@ -17,7 +17,7 @@ TS="$(date +%Y%m%d-%H%M%S)"
 echo "=== 1. vendor/ctrl ==="
 mkdir -p "$DEST/ctrl"
 for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtube.sh yt-bridge.py dmenu_ln menu-drastic \
-         libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh \
+         libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh loadapp.sh mtp-watch.sh setSSH.sh \
          geminus-update.py version scrape_libretro.py scrape_screenscraper.py \
          scrape_thegamesdb.py ra_login.py ra_sync.py ra_achievements.py \
          ra_local_export.py ra_local_scan.py ra_local_snapshot.lua ra_local_runtime.lua \

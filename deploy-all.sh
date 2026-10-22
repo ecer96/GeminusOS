@@ -80,6 +80,7 @@ build_all() {
     cp -f "$MENU/build/geminus-ach-toast"        "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/geminus-power-watch.py"         "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/ndsCtrl-libdsflip.sh"           "$PAYLOAD/vendor/ctrl/"
+    cp -f "$MENU/loadapp.sh"                     "$PAYLOAD/vendor/ctrl/"
     cp -f "$SHADER/build/libdrastic_shader.so"   "$PAYLOAD/vendor/ctrl/"
     ( cd "$LAUNCHER/assets/icons" && ./build_grid_sets.sh )
     rm -rf "$PAYLOAD/vendor/ctrl/icons_grid" "$PAYLOAD/vendor/ctrl/icons_grid_light"
@@ -94,7 +95,7 @@ build_all() {
           "$PAYLOAD/vendor/ctrl/ui/"
     mkdir -p "$PAYLOAD/vendor/ctrl/fonts"
     cp -f "$LAUNCHER/assets/fonts/"*.ttf "$PAYLOAD/vendor/ctrl/fonts/" 2>/dev/null || true
-    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh,geminus-achd,geminus-ach-toast,geminus-power-watch.py}
+    chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh,loadapp.sh,geminus-achd,geminus-ach-toast,geminus-power-watch.py}
     chmod 755 "$PAYLOAD/vendor/ctrl/"scrape_*.py "$PAYLOAD/vendor/ctrl/"ra_*.py
     chmod 644 "$PAYLOAD/vendor/ctrl/ra_local_snapshot.lua"
     mkdir -p "$PAYLOAD/vendor/ctrl/apps"
