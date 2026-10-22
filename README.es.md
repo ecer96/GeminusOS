@@ -133,13 +133,16 @@ GeminusOS **no** incluye juegos, ROMs ni BIOS.
 
 ### Carpetas de ROMs
 
-Cada sistema va en su propia carpeta dentro de la microSD:
+GeminusOS lee juegos de **las dos microSD**:
 
-```text
-/mnt/sdcard/roms/<sistema>/
-```
+| Tarjeta | Ruta | Mayúsculas/minúsculas |
+|---|---|---|
+| Tarjeta del sistema (donde está flasheado GeminusOS) | `/mnt/mmc/Roms/<SISTEMA>/` | Mayúsculas: `NDS`, `SNES`, `PSX` |
+| Segunda tarjeta / externa | `/mnt/sdcard/roms/<sistema>/` | Minúsculas: `nds`, `snes`, `psx` |
 
-Ejemplos habituales:
+La partición de ROMs de la tarjeta del sistema suele aparecer como **ROMS** en el PC; la externa aparece como otra unidad. Puedes usar cualquiera de las dos, o ambas a la vez.
+
+Ejemplos habituales para la **tarjeta externa**:
 
 | Sistema | Carpeta |
 |---|---|
@@ -161,16 +164,16 @@ Para juegos de varios discos, usa una subcarpeta con una lista `.m3u` cuando el 
 | Tipo | Carpeta | Contenido |
 |---|---|---|
 | **Apps** | `/mnt/sdcard/roms/APPS/` | Scripts `.sh`; uno por aplicación |
-| **Ports** | `/mnt/sdcard/roms/ports/` | Lanzadores de ports; un `.sh` por port |
+| **Ports** | `/mnt/sdcard/roms/ports/` o `/mnt/mmc/Roms/PORTS/` | Lanzadores de ports; un `.sh` por port |
 
-`APPS` va en mayúsculas. La carpeta ya incluye las apps internas: navegador, YouTube y reproductor multimedia. Añade tus propios `.sh` y aparecerán en la sección **Apps**.
+`APPS` va en mayúsculas. Las apps de usuario se leen **solo de la tarjeta externa**: la carpeta `APPS` del firmware en la tarjeta del sistema se ignora a propósito. La carpeta externa ya incluye las apps internas: navegador, YouTube y reproductor multimedia. Añade tus propios `.sh` y aparecerán en la sección **Apps**.
 
 ### Copiar archivos desde el PC
 
 - Usa **MTP** desde la consola (Ajustes → MTP), o
-- Saca la microSD y usa un lector de tarjetas.
+- Saca cualquiera de las dos microSD y usa un lector de tarjetas.
 
-En Windows, la partición de datos puede aparecer como una unidad aparte. No modifiques las particiones del sistema.
+En Windows, la partición de ROMs de la tarjeta del sistema puede aparecer como **ROMS**, y la externa como otra unidad. No modifiques las particiones del sistema.
 
 Las carátulas y metadatos se descargan desde el **Scraper** (ver abajo). Las BIOS no están incluidas: colócalas donde las espere cada emulador.
 

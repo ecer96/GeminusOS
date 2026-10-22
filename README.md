@@ -193,13 +193,16 @@ GeminusOS does **not** include games, ROMs or BIOS files.
 
 ### ROM folders
 
-Copy each system to its own folder inside the microSD card:
+GeminusOS reads games from **both microSD cards**:
 
-```text
-/mnt/sdcard/roms/<system>/
-```
+| Card | Path | Folder case |
+|---|---|---|
+| OS card (where GeminusOS is flashed) | `/mnt/mmc/Roms/<SYSTEM>/` | Uppercase example: `NDS`, `SNES`, `PSX` |
+| Second / external card | `/mnt/sdcard/roms/<system>/` | Lowercase example: `nds`, `snes`, `psx` |
 
-Common examples:
+The OS card's ROM partition usually appears as **ROMS** on a PC; the external card appears as its own drive. You can use either card, or both at the same time.
+
+Common examples for the **external card**:
 
 | System | Folder |
 |---|---|
@@ -221,16 +224,16 @@ Keep multi-disc games in a subfolder with a `.m3u` playlist when the emulator su
 | Type | Folder | Content |
 |---|---|---|
 | **Apps** | `/mnt/sdcard/roms/APPS/` | Executable `.sh` files; one script per app |
-| **Ports** | `/mnt/sdcard/roms/ports/` | Port launchers; one `.sh` per port |
+| **Ports** | `/mnt/sdcard/roms/ports/` or `/mnt/mmc/Roms/PORTS/` | Port launchers; one `.sh` per port |
 
-`APPS` is uppercase. The folder already contains the built-in apps such as the browser, YouTube and the media player. Add your own `.sh` launchers there and they will appear in the **Apps** section.
+`APPS` is uppercase. User apps are read from the **external card** only: the firmware `APPS` folder on the OS card is intentionally ignored. The external folder already contains the built-in apps such as the browser, YouTube and the media player. Add your own `.sh` launchers there and they will appear in the **Apps** section.
 
 ### Copying files from a computer
 
 - Use **MTP** from the console (Settings → MTP), or
-- Remove the microSD card and use a card reader.
+- Remove either microSD card and use a card reader.
 
-On Windows, the large data partition may appear as a separate drive. Do not modify the system partitions.
+On Windows, the OS card's ROM partition may appear as **ROMS**, and the external card as another drive. Do not modify the system partitions.
 
 Covers and metadata are downloaded from the **Scraper** (see below). BIOS files are not included; place them in the folder expected by each emulator.
 
