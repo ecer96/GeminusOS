@@ -29,6 +29,19 @@ RA_DIRS = [
 ]
 
 
+STATUS = "/mnt/data/geminus_ra_login.status"
+
+
+def status(state, msg):
+    try:
+        tmp = STATUS + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            f.write("state=%s\nmsg=%s\n" % (state, msg.replace("\n", " ")))
+        os.replace(tmp, STATUS)
+    except OSError:
+        pass
+
+
 def log(msg):
     print(msg, flush=True)
 
@@ -137,7 +150,15 @@ def main():
     user = cfg.get("user", "").strip()
     password = cfg.get("pass", "").strip()
 
+    # Configs guardadas por versiones con el bug: la "contraseña" era la
+    # propia clave API. No sirve para API_Login ni para RetroArch.
+    if password and password == cfg.get("key", "").strip():
+        password = ""
+
+    status("running", "Validando credenciales...")
+
     if not user:
+        status("error", "Falta el usuario de RetroAchievements")
         log("ERROR: falta el usuario")
         return 2
 
@@ -145,12 +166,14 @@ def main():
         try:
             key = api_login(user, password)
         except Exception as e:  # noqa: BLE001
+            status("error", "Credenciales rechazadas o sin conexión")
             log("ERROR al validar credenciales: %s" % e)
             log("Se conserva la clave API anterior si existía.")
             key = cfg.get("key", "").strip()
         else:
             cfg["key"] = key
             write_cfg(cfg)
+            status("running", "Credenciales válidas. Sincronizando logros...")
             log("clave API obtenida y guardada")
     else:
         key = cfg.get("key", "").strip()
@@ -166,10 +189,22 @@ def main():
         pass
 
     if key:
-        subprocess.run(["python3", "/mnt/vendor/ctrl/ra_sync.py"],
-                       check=False)
-        log("sincronización lanzada")
+        rc = subprocess.run(["python3", "/mnt/vendor/ctrl/ra_sync.py"],
+                            check=False)
+        if rc.returncode == 0:
+            n = 0
+            try:
+                with open("/mnt/data/geminus_ra.tsv", encoding="utf-8") as tsv:
+                    n = sum(1 for _ in tsv)
+            except OSError:
+                pass
+            status("ok", "Logros sincronizados: %d juegos" % n)
+            log("sincronización OK: %d juegos" % n)
+        else:
+            status("error", "No se pudieron sincronizar los logros")
+            log("ERROR: ra_sync.py devolvió %d" % rc.returncode)
     else:
+        status("error", "No hay clave API para sincronizar")
         log("AVISO: no hay clave API; no se puede sincronizar")
 
     return 0
