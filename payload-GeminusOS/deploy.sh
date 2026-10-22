@@ -19,7 +19,7 @@ mkdir -p "$DEST/ctrl"
 for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtube.sh yt-bridge.py dmenu_ln menu-drastic \
          libmenuhook.so libdrastic_shader.so ndsCtrl-libdsflip.sh mtp-watch.sh setSSH.sh \
          geminus-update.py version scrape_libretro.py scrape_screenscraper.py \
-         scrape_thegamesdb.py; do
+         scrape_thegamesdb.py ra_login.py ra_sync.py ra_achievements.py; do
     src="$HERE/vendor/ctrl/$f"
     [ -f "$src" ] || { echo "  falta $src"; exit 1; }
     cp -f "$src" "$DEST/ctrl/$f"; chmod 755 "$DEST/ctrl/$f"

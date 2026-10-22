@@ -65,6 +65,9 @@ build_all() {
     cp -f "$LAUNCHER/scrape_libretro.py" \
           "$LAUNCHER/scrape_screenscraper.py" \
           "$LAUNCHER/scrape_thegamesdb.py"       "$PAYLOAD/vendor/ctrl/"
+    cp -f "$LAUNCHER/ra_login.py" \
+          "$LAUNCHER/ra_sync.py" \
+          "$LAUNCHER/ra_achievements.py"         "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/menu-drastic"             "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/build/libmenuhook.so"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/ndsCtrl-libdsflip.sh"           "$PAYLOAD/vendor/ctrl/"
@@ -79,7 +82,7 @@ build_all() {
     mkdir -p "$PAYLOAD/vendor/ctrl/fonts"
     cp -f "$LAUNCHER/assets/fonts/"*.ttf "$PAYLOAD/vendor/ctrl/fonts/" 2>/dev/null || true
     chmod 755 "$PAYLOAD/vendor/ctrl/"{geminuslauncher,geminus-yt-panel,geminus-inpanel,geminus-browser,youtube.sh,yt-bridge.py,dmenu_ln,menu-drastic,ndsCtrl-libdsflip.sh}
-    chmod 755 "$PAYLOAD/vendor/ctrl/"scrape_*.py
+    chmod 755 "$PAYLOAD/vendor/ctrl/"scrape_*.py "$PAYLOAD/vendor/ctrl/"ra_*.py
     mkdir -p "$PAYLOAD/vendor/ctrl/apps"
     cp -f "$LAUNCHER/apps/"*.sh "$LAUNCHER/apps/"*.py "$LAUNCHER/apps/"*.conf \
           "$LAUNCHER/apps/"*.dev \
