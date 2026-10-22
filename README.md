@@ -18,6 +18,12 @@ The uncompressed image is 15.5 GB. You need a microSD card of **at least 16 GB**
 
 > The downloadable image is the **v1.1 base**. After the first boot, update to the latest version (currently **v1.29**) from **Settings → Update**. The base image already includes the updater.
 
+### What is in each release?
+
+- **v1** — full base image. Download this once and flash it to a microSD card.
+- **v1.29** — latest system payload. It is installed automatically through **Settings → Update**; you do **not** need to reflash the card.
+- Later releases are incremental payloads for the updater. The full image only changes when the base system needs to be regenerated.
+
 ## Requirements
 
 - Anbernic RG DS Plus.
