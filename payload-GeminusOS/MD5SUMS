@@ -59,7 +59,7 @@ e3a49568a1aa6b1e42bd9a7a0678f49c  ./vendor/ctrl/menu-drastic
 5ddb56a02ef83ea3a6deed798e3540b6  ./vendor/ctrl/mtp-watch.sh
 7c4f0cf35fb212b93ecefffd1750d6eb  ./vendor/ctrl/ndsCtrl-libdsflip.sh
 1567fe0c21e347b8173e07a9e80e61ef  ./vendor/ctrl/ra_achievements.py
-e739faa5666168391bd9ece2f138fc50  ./vendor/ctrl/ra_login.py
+dcc970376cbe9e377c04139a8d569dc9  ./vendor/ctrl/ra_login.py
 9405798a487ffa887aca9843134c28b9  ./vendor/ctrl/ra_sync.py
 bfd9c413d50579e85c8c17e800790f29  ./vendor/ctrl/scrape_libretro.py
 8a4fcf98e3ac57e456a21160f460d023  ./vendor/ctrl/scrape_screenscraper.py
@@ -72,7 +72,7 @@ d1cee2ddc801f521c3e457d692325beb  ./vendor/ctrl/ui/back_arrow.png
 741cf6a49acbe68612b0d0a6c0a7acb3  ./vendor/ctrl/ui/geminus_word.png
 ac8a84d981911db30ccd1f5d9265cf89  ./vendor/ctrl/ui/next_arrow_metal.png
 b903fa9c23f392e5cad38772ccd9e4aa  ./vendor/ctrl/ui/next_arrow.png
-74008a7be1869f756add47ea93ff600c  ./vendor/ctrl/version
+dbec2b154d2ddb6b89bb10d478aacdaa  ./vendor/ctrl/version
 89310979101b576c0c78e58b6524f242  ./vendor/ctrl/waiting/bootlogo.bmp
 01bf561960a2ac20ed890b7b375f0b6c  ./vendor/ctrl/youtube.sh
 59dfc4a8d021ce054ddf30c9d018527e  ./vendor/ctrl/yt-bridge.py

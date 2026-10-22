@@ -180,32 +180,36 @@ def main():
 
     oldkey = cfg.get("key", "").strip()
     key = oldkey
+    login_ok = False
 
     if password:
         try:
             token = api_login(user, password)
+            login_ok = True
         except Exception as e:  # noqa: BLE001
-            status("error", "Credenciales rechazadas o sin conexión")
-            log("ERROR al validar credenciales: %s" % e)
-            log("Se conserva la clave API anterior si existía.")
+            log("ERROR al validar contraseña: %s" % e)
         else:
             if verify_key(user, token):
                 key = token
                 cfg["key"] = key
                 write_cfg(cfg)
-                status("running", "Credenciales válidas. Sincronizando logros...")
-                log("clave API obtenida y guardada")
+                log("clave API obtenida del login y guardada")
             else:
-                # API_Login devuelve un token de sesión que no siempre vale
-                # como clave de la Web API: conservamos la clave anterior.
                 log("AVISO: el token de login no vale como clave API")
-                if oldkey and verify_key(user, oldkey):
-                    key = oldkey
-                    status("running", "Credenciales válidas. Sincronizando logros...")
-                else:
-                    status("error", "Falta la clave API web (pégala en el 3er campo)")
     else:
         log("sin contraseña nueva: se usa la clave existente")
+
+    # No lanzar 16 peticiones con una clave inválida.
+    if key and not verify_key(user, key):
+        log("la clave API guardada no es válida")
+        key = ""
+
+    if key:
+        status("running", "Sincronizando logros...")
+    elif password and not login_ok:
+        status("error", "No se pudo validar la contraseña; revisa tu cuenta")
+    else:
+        status("error", "Falta la clave API web (pégala en el 3er campo)")
 
     if password:
         configure_retroarch(user, password)
@@ -244,8 +248,7 @@ def main():
             status("error", msg)
             log("ERROR: ra_sync.py devolvió %d" % rc.returncode)
     else:
-        status("error", "No hay clave API para sincronizar")
-        log("AVISO: no hay clave API; no se puede sincronizar")
+        log("AVISO: no hay clave API válida; no se puede sincronizar")
 
     return 0
 
