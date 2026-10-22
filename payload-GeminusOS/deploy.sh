@@ -27,7 +27,7 @@ for f in geminuslauncher geminus-yt-panel geminus-inpanel geminus-browser youtub
 done
 
     echo "=== 1b. vendor/ctrl/icons_grid + ui ==="
-    for d in icons_grid ui apps fonts; do
+    for d in icons_grid icons_grid_light ui apps fonts; do
         mkdir -p "$DEST/ctrl/$d"
         cp -rf "$HERE/vendor/ctrl/$d/." "$DEST/ctrl/$d"/ 2>/dev/null || true
         chmod 644 "$DEST/ctrl/$d"/* 2>/dev/null

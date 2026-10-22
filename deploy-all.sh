@@ -72,7 +72,11 @@ build_all() {
     cp -f "$MENU/build/libmenuhook.so"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$MENU/ndsCtrl-libdsflip.sh"           "$PAYLOAD/vendor/ctrl/"
     cp -f "$SHADER/build/libdrastic_shader.so"   "$PAYLOAD/vendor/ctrl/"
-    cp -f "$LAUNCHER/assets/icons/png/"*.png     "$PAYLOAD/vendor/ctrl/icons_grid/"
+    ( cd "$LAUNCHER/assets/icons" && ./build_grid_sets.sh )
+    rm -rf "$PAYLOAD/vendor/ctrl/icons_grid" "$PAYLOAD/vendor/ctrl/icons_grid_light"
+    mkdir -p "$PAYLOAD/vendor/ctrl/icons_grid" "$PAYLOAD/vendor/ctrl/icons_grid_light"
+    cp -f "$LAUNCHER/assets/icons/grid_dark/"*.png  "$PAYLOAD/vendor/ctrl/icons_grid/"
+    cp -f "$LAUNCHER/assets/icons/grid_light/"*.png "$PAYLOAD/vendor/ctrl/icons_grid_light/"
     cp -f "$LAUNCHER/assets/brand/geminus_word.png" \
           "$LAUNCHER/assets/brand/geminus_word_dark.png" \
           "$LAUNCHER/assets/brand/geminus_logo.png" \
