@@ -4,7 +4,7 @@ A ready-to-use custom system image for the **Anbernic RG DS Plus** (Rockchip RK3
 
 **English** | [Español](README.es.md)
 
-![GeminusOS](https://img.shields.io/badge/system-v1.34-blue)
+![GeminusOS](https://img.shields.io/badge/system-v1.35-blue)
 
 ## Download
 
@@ -16,12 +16,12 @@ The base image is available in the **[v1 release](https://github.com/ecer96/Gemi
 
 The uncompressed image is 15.5 GB. You need a microSD card of **at least 16 GB** (32 GB recommended).
 
-> The downloadable image is the **v1.1 base**. After the first boot, update to the latest version (currently **v1.34**) from **Settings → Update**. The base image already includes the updater.
+> The downloadable image is the **v1.1 base**. After the first boot, update to the latest version (currently **v1.35**) from **Settings → Update**. The base image already includes the updater.
 
 ### What is in each release?
 
 - **v1** — full base image. Download this once and flash it to a microSD card.
-- **v1.34** — latest system payload. It is installed automatically through **Settings → Update**; you do **not** need to reflash the card. It ships the current **aurora UI** (home, lists, search, settings, light theme) and the free **Panfrost** GPU driver (kernel modules 6.1.141 + Mesa 24.2.8) used by 3D ports such as Pocket Native.
+- **v1.35** — latest system payload. It is installed automatically through **Settings → Update**; you do **not** need to reflash the card. It ships the aurora UI with the new **horizon background, icons and branding** (home, lists, search, settings, light theme) and the free **Panfrost** GPU driver (kernel modules 6.1.141 + Mesa 24.2.8) used by 3D ports such as Pocket Native.
 - **v1.29** — earlier system payload, installed through **Settings → Update**.
 - Later releases are incremental payloads for the updater. The full image only changes when the base system needs to be regenerated.
 
