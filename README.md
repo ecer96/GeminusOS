@@ -4,7 +4,7 @@ A ready-to-use custom system image for the **Anbernic RG DS Plus** (Rockchip RK3
 
 **English** | [Español](README.es.md)
 
-![GeminusOS](https://img.shields.io/badge/system-v1.36-blue)
+![GeminusOS](https://img.shields.io/badge/system-v1.37-blue)
 
 ## Download
 
@@ -16,12 +16,12 @@ The base image is available in the **[v1 release](https://github.com/ecer96/Gemi
 
 The uncompressed image is 15.5 GB. You need a microSD card of **at least 16 GB** (32 GB recommended).
 
-> The downloadable image is the **v1.1 base**. After the first boot, update to the latest version (currently **v1.36**) from **Settings → Update**. The base image already includes the updater.
+> The downloadable image is the **v1.1 base**. After the first boot, update to the latest version (currently **v1.37**) from **Settings → Update**. The base image already includes the updater.
 
 ### What is in each release?
 
 - **v1** — full base image. Download this once and flash it to a microSD card.
-- **v1.36** — latest system payload. It is installed automatically through **Settings → Update**; you do **not** need to reflash the card. It ships the aurora UI with the horizon background, icons and branding, **stylus dragging with inertia** in the slider, and the free **Panfrost** GPU driver (kernel modules 6.1.141 + Mesa 24.2.8) used by 3D ports such as Pocket Native.
+- **v1.37** — latest system payload. It is installed automatically through **Settings → Update**; you do **not** need to reflash the card. Offline voice assistant with a pixel-art face to launch games and change settings hands-free. See the [release notes](https://github.com/ecer96/GeminusOS/releases/tag/v1.37).
 - **v1.29** — earlier system payload, installed through **Settings → Update**.
 - Later releases are incremental payloads for the updater. The full image only changes when the base system needs to be regenerated.
 
@@ -182,7 +182,7 @@ You can also use balenaEtcher on macOS.
 2. Power on the console.
 3. The first boot may take a little longer than usual.
 4. Connect to WiFi.
-5. Open **Settings → Update** and install the latest version (currently **v1.29**).
+5. Open **Settings → Update** and install the latest version (currently **v1.37**).
 
 The base image is v1.1. Updating is important: new launcher features, fixes and improvements are delivered through the updater, so you do not need to reflash the card for every release.
 
@@ -320,7 +320,7 @@ Open **Settings → Update**.
 - The updater downloads the payload, verifies its SHA-256, installs it and restarts the launcher.
 - You do **not** need to reflash the microSD card for normal updates.
 
-The downloadable base image is v1.1. After the first boot, update to the latest version (currently v1.29). If the check fails, the menu shows **“Offline / could not check”** instead of pretending everything is up to date.
+The downloadable base image is v1.1. After the first boot, update to the latest version (currently v1.37). If the check fails, the menu shows **“Offline / could not check”** instead of pretending everything is up to date.
 
 ---
 

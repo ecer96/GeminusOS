@@ -6,7 +6,7 @@ Sistema operativo listo para usar en la **Anbernic RG DS Plus** (Rockchip
 RK3568, doble pantalla de 1024×768). Incluye launcher propio, emuladores,
 menú in-game, aplicaciones y ajustes del sistema en una sola imagen.
 
-![GeminusOS](https://img.shields.io/badge/versi%C3%B3n-v1.36-blue)
+![GeminusOS](https://img.shields.io/badge/versi%C3%B3n-v1.37-blue)
 
 ## Descarga
 
@@ -20,7 +20,7 @@ La imagen descomprimida ocupa 15,5 GB. Necesitas una microSD de **16 GB como
 mínimo** (se recomienda 32 GB).
 
 > La imagen descargable es la **base v1.1**. Tras el primer arranque, actualiza a
-> la última versión (actualmente **v1.36**) desde **Ajustes → Actualizar**. La
+> la última versión (actualmente **v1.37**) desde **Ajustes → Actualizar**. La
 > imagen base ya incluye el actualizador.
 
 ## Instalación
@@ -251,7 +251,7 @@ Abre **Ajustes → Actualizar**.
 - El actualizador descarga el payload, verifica su SHA-256, lo instala y reinicia el launcher.
 - **No** hace falta volver a flashear la microSD para las actualizaciones normales.
 
-La imagen base descargable es la v1.1. Tras el primer arranque, actualiza a la última versión (actualmente **v1.29**). Si la comprobación falla, el menú muestra **“Sin conexión / no se pudo comprobar”** en lugar de decir que todo está al día.
+La imagen base descargable es la v1.1. Tras el primer arranque, actualiza a la última versión (actualmente **v1.37**). Si la comprobación falla, el menú muestra **“Sin conexión / no se pudo comprobar”** en lugar de decir que todo está al día.
 
 ## Menús dentro del juego
 
