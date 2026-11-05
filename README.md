@@ -21,7 +21,7 @@ The uncompressed image is 15.5 GB. You need a microSD card of **at least 16 GB**
 ### What is in each release?
 
 - **v1** — full base image. Download this once and flash it to a microSD card.
-- **v1.38** — latest system payload. It is installed automatically through **Settings → Update**; you do **not** need to reflash the card. Geminus-NDS, a native NDS emulator with GPU 3D up to 4x, fast forward, save states and achievements. See the [release notes](https://github.com/ecer96/GeminusOS/releases/tag/v1.38).
+- **v1.38** — latest system payload. It is installed automatically through **Settings → Update**; you do **not** need to reflash the card. Geminus-NDS, a native NDS emulator with GPU 3D up to 4x, fast forward, save states and local achievements. See the [release notes](https://github.com/ecer96/GeminusOS/releases/tag/v1.38).
 - **v1.29** — earlier system payload, installed through **Settings → Update**.
 - Later releases are incremental payloads for the updater. The full image only changes when the base system needs to be regenerated.
 
